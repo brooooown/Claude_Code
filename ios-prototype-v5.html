@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>iOS Prototype v5</title>
+    <style>
+        :root {
+            --safe-area-inset-top: env(safe-area-inset-top);
+            --safe-area-inset-right: env(safe-area-inset-right);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+            --safe-area-inset-left: env(safe-area-inset-left);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: #f0f0f0;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            height: 100dvh;
+            width: 100vw;
+        }
+
+        .device {
+            width: 100vw;
+            height: 100dvh;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        /* Screens */
+        .screen {
+            position: absolute;
+            inset: 0;
+            background: #fff;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Glass Morphism */
+        .glass-effect {
+            backdrop-filter: blur(48px) saturate(220%) brightness(1.08);
+            -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(1.08);
+            background: linear-gradient(175deg,
+                rgba(255,255,255,0.72) 0%,
+                rgba(255,255,255,0.38) 40%,
+                rgba(255,255,255,0.48) 100%);
+            border: 1px solid rgba(255,255,255,0.85);
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                inset 0 -1px 0 rgba(255,255,255,0.3);
+        }
+
+        .glass-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(255,255,255,0.8) 50%,
+                transparent);
+        }
+
+        /* Tab Bar */
+        .tab-bar-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 16px calc(16px + var(--safe-area-inset-bottom)) 16px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-group {
+            flex: 1;
+            display: flex;
+            border-radius: 30px;
+            padding: 8px;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 4px;
+            border-radius: 22px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #999;
+            font-size: 10px;
+            font-weight: 500;
+            min-height: 60px;
+            background: none;
+            border: none;
+            position: relative;
+        }
+
+        .tab-item:active {
+            background: rgba(0,0,0,0.06);
+            transform: scale(0.95);
+        }
+
+        .tab-item.active {
+            background: rgba(0,0,0,0.06);
+            color: #222;
+        }
+
+        .tab-icon {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+        }
+
+        .search-tab {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .search-tab:active {
+            transform: scale(0.9);
+            background: rgba(0,0,0,0.06);
+        }
+
+        .search-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #222;
+        }
+
+        /* Screen Headers */
+        .screen-header {
+            background: #fff;
+            padding: calc(60px + var(--safe-area-inset-top)) 20px 20px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .screen-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #222;
+            margin: 0;
+        }
+
+        .profile-btn {
+            position: absolute;
+            right: 20px;
+            top: calc(60px + var(--safe-area-inset-top));
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease;
+        }
+
+        .profile-btn:active {
+            background: rgba(0,0,0,0.06);
+        }
+
+        /* Screen Content */
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 20px 120px 20px;
+        }
+
+        /* Search Float Bar */
+        .search-float-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #fff;
+            padding: calc(60px + var(--safe-area-inset-top)) 20px 20px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.28s ease;
+        }
+
+        .search-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            height: 44px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 22px;
+            padding: 0 20px;
+            font-size: 16px;
+            outline: none;
+            color: #222;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+        }
+
+        .search-submit {
+            height: 44px;
+            padding: 0 20px;
+            background: #ff333f;
+            color: white;
+            border: none;
+            border-radius: 22px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .search-submit:active {
+            background: #e62e39;
+        }
+
+        /* Common Components */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin: 20px 0 16px 0;
+        }
+
+        .grid-3x3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            background: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .grid-item:active {
+            transform: scale(0.98);
+        }
+
+        .item-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .item-price {
+            position: absolute;
+            bottom: 6px;
+            left: 6px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            gap: 8px;
+            padding: 20px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chip {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s ease;
+        }
+
+        .chip.active {
+            background: rgba(0,0,0,0.06);
+            color: #222;
+        }
+
+        .chip:active {
+            background: rgba(0,0,0,0.06);
+        }
+
+        /* Sub Tabs */
+        .subtab-bar {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .subtab {
+            flex: 1;
+            padding: 12px 0;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .subtab.active {
+            color: #222;
+        }
+
+        .subtab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ff333f;
+        }
+
+        /* History Cards */
+        .history-card {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .history-card:active {
+            background: #f0f0f0;
+        }
+
+        .history-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .history-text {
+            flex: 1;
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 4px;
+        }
+
+        .history-subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Trending Tags */
+        .trending-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            background: #006ed1;
+            color: white;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background 0.15s ease;
+        }
+
+        .tag:active {
+            background: #0095ee;
+        }
+
+        /* Wallet Components */
+        .balance-card {
+            background: linear-gradient(135deg, #ff333f 0%, #ff6b6b 100%);
+            color: white;
+            padding: 24px 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .balance-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .balance-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .balance-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .balance-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .asset-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .asset-label {
+            font-size: 16px;
+            color: #222;
+        }
+
+        .asset-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        /* My Page Overlay */
+        .mypage-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mypage-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .mypage-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: #fff;
+            transform: translateX(100%);
+            transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mypage-overlay.active .mypage-panel {
+            transform: translateX(0);
+        }
+
+        .mypage-header {
+            padding: calc(60px + var(--safe-area-inset-top)) 20px 20px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .mypage-close {
+            position: absolute;
+            left: 20px;
+            top: calc(60px + var(--safe-area-inset-top));
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mypage-close:active {
+            background: rgba(0,0,0,0.06);
+        }
+
+        .mypage-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #222;
+            text-align: center;
+        }
+
+        .mypage-content {
+            padding: 20px;
+        }
+
+        .mypage-profile {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mypage-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: #ff333f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .mypage-info {
+            flex: 1;
+        }
+
+        .mypage-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 4px;
+        }
+
+        .mypage-email {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .mypage-menu {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .mypage-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f9f9f9;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .mypage-menu-item:active {
+            background: #f9f9f9;
+        }
+
+        .mypage-menu-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+
+        .mypage-menu-text {
+            flex: 1;
+            font-size: 16px;
+            color: #222;
+        }
+
+        .mypage-menu-arrow {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Scrollbar Hide */
+        .filter-chips::-webkit-scrollbar,
+        .screen-content::-webkit-scrollbar,
+        .mypage-panel::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Performance */
+        .tab-item,
+        .search-tab,
+        .grid-item,
+        .history-card,
+        .chip,
+        .tag,
+        .mypage-panel {
+            will-change: transform;
+        }
+
+        /* Responsive */
+        @media (max-width: 375px) {
+            .grid-3x3 { gap: 4px; }
+            .tab-item { font-size: 9px; min-height: 56px; }
+            .tab-icon { width: 18px; height: 18px; }
+            .mypage-panel { width: 100vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="device">
+        <!-- Home Screen -->
+        <div id="screen-home" class="screen active">
+            <div class="screen-header">
+                <h1 class="screen-title">メルカリ</h1>
+                <button class="profile-btn" onclick="openMyPage()">👤</button>
+            </div>
+            <div class="screen-content">
+                <div class="subtab-bar">
+                    <button class="subtab active">すべて</button>
+                    <button class="subtab">いいね</button>
+                </div>
+
+                <div class="grid-3x3">
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #ff6b6b;">👕</div>
+                        <div class="item-price">¥1,200</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #4ecdc4;">📚</div>
+                        <div class="item-price">¥800</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #45b7d1;">🎮</div>
+                        <div class="item-price">¥15,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #f9ca24;">⌚</div>
+                        <div class="item-price">¥25,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #6c5ce7;">👜</div>
+                        <div class="item-price">¥12,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #a55eea;">🕶</div>
+                        <div class="item-price">¥8,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #26de81;">👟</div>
+                        <div class="item-price">¥18,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #fd79a8;">💄</div>
+                        <div class="item-price">¥3,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #fdcb6e;">📱</div>
+                        <div class="item-price">¥45,000</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">トレンドキーワード</h3>
+                <div class="trending-tags">
+                    <button class="tag">#ナイキ</button>
+                    <button class="tag">#古着</button>
+                    <button class="tag">#iPhone</button>
+                    <button class="tag">#ルイヴィトン</button>
+                </div>
+
+                <h3 class="section-title">ブランド特集</h3>
+                <div style="display: flex; gap: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <div style="min-width: 80px; text-align: center;">
+                        <div style="width: 80px; height: 80px; border-radius: 40px; background: #333; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold; margin-bottom: 8px;">Nike</div>
+                        <span style="font-size: 12px; color: #666; font-weight: 500;">Nike</span>
+                    </div>
+                    <div style="min-width: 80px; text-align: center;">
+                        <div style="width: 80px; height: 80px; border-radius: 40px; background: #333; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold; margin-bottom: 8px;">LV</div>
+                        <span style="font-size: 12px; color: #666; font-weight: 500;">Louis Vuitton</span>
+                    </div>
+                    <div style="min-width: 80px; text-align: center;">
+                        <div style="width: 80px; height: 80px; border-radius: 40px; background: #333; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold; margin-bottom: 8px;">🍎</div>
+                        <span style="font-size: 12px; color: #666; font-weight: 500;">Apple</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Screen -->
+        <div id="screen-search" class="screen">
+            <div class="search-float-bar">
+                <div class="search-input-container">
+                    <input type="text" class="search-input" placeholder="何をお探しですか？">
+                    <button class="search-submit">検索</button>
+                </div>
+            </div>
+            <div class="screen-content">
+                <div class="filter-chips">
+                    <button class="chip active">すべて</button>
+                    <button class="chip">ファッション</button>
+                    <button class="chip">電子機器</button>
+                    <button class="chip">家具・インテリア</button>
+                    <button class="chip">本・雑誌</button>
+                </div>
+
+                <h3 class="section-title">最近の検索</h3>
+                <div class="history-card">
+                    <div class="history-img" style="background: #ff6b6b;">👕</div>
+                    <div class="history-text">
+                        <div class="history-title">Tシャツ</div>
+                        <div class="history-subtitle">300件の商品</div>
+                    </div>
+                </div>
+                <div class="history-card">
+                    <div class="history-img" style="background: #4ecdc4;">📱</div>
+                    <div class="history-text">
+                        <div class="history-title">iPhone</div>
+                        <div class="history-subtitle">150件の商品</div>
+                    </div>
+                </div>
+                <div class="history-card">
+                    <div class="history-img" style="background: #45b7d1;">👟</div>
+                    <div class="history-text">
+                        <div class="history-title">スニーカー</div>
+                        <div class="history-subtitle">200件の商品</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">人気のキーワード</h3>
+                <div class="trending-tags">
+                    <button class="tag">#ナイキ</button>
+                    <button class="tag">#古着</button>
+                    <button class="tag">#iPhone</button>
+                    <button class="tag">#ルイヴィトン</button>
+                    <button class="tag">#カメラ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- List Screen -->
+        <div id="screen-list" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">マイリスト</h1>
+            </div>
+            <div class="screen-content">
+                <div class="subtab-bar">
+                    <button class="subtab active">いいね</button>
+                    <button class="subtab">最近見た商品</button>
+                </div>
+                <div class="grid-3x3">
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #ff6b6b;">👕</div>
+                        <div class="item-price">¥2,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #4ecdc4;">👖</div>
+                        <div class="item-price">¥4,200</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #45b7d1;">👟</div>
+                        <div class="item-price">¥8,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #f9ca24;">⌚</div>
+                        <div class="item-price">¥15,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #6c5ce7;">👒</div>
+                        <div class="item-price">¥3,200</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #a55eea;">👜</div>
+                        <div class="item-price">¥22,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auction Screen -->
+        <div id="screen-auction" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">オークション</h1>
+            </div>
+            <div class="screen-content">
+                <h3 class="section-title">注目のオークション</h3>
+                <div style="display: flex; gap: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -20px 20px; padding: 0 20px;">
+                    <div style="min-width: 240px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="height: 150px; background: #ff6b6b; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">限定商品</div>
+                        <div style="padding: 12px;">
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">限定スニーカー</div>
+                            <div style="color: #ff333f; font-weight: 700; margin-bottom: 4px;">現在価格: ¥45,000</div>
+                            <div style="font-size: 12px; color: #666;">残り 2時間</div>
+                        </div>
+                    </div>
+                    <div style="min-width: 240px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="height: 150px; background: #4ecdc4; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">人気</div>
+                        <div style="padding: 12px;">
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">ヴィンテージ時計</div>
+                            <div style="color: #ff333f; font-weight: 700; margin-bottom: 4px;">現在価格: ¥120,000</div>
+                            <div style="font-size: 12px; color: #666;">残り 1日</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-chips">
+                    <button class="chip active">すべて</button>
+                    <button class="chip">終了間近</button>
+                    <button class="chip">人気</button>
+                    <button class="chip">新着</button>
+                </div>
+
+                <div class="grid-3x3">
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #ff7675;">📱</div>
+                        <div class="item-price">¥25,000</div>
+                        <div style="position: absolute; top: 6px; right: 6px; background: #ff333f; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">残り 3h</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #74b9ff;">🎮</div>
+                        <div class="item-price">¥18,500</div>
+                        <div style="position: absolute; top: 6px; right: 6px; background: #ff333f; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">残り 1d</div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="item-img" style="background: #00b894;">💻</div>
+                        <div class="item-price">¥55,000</div>
+                        <div style="position: absolute; top: 6px; right: 6px; background: #ff333f; color: white; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">残り 6h</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Screen -->
+        <div id="screen-wallet" class="screen">
+            <div class="screen-header">
+                <h1 class="screen-title">おサイフ</h1>
+            </div>
+            <div class="screen-content">
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <div class="balance-title">メルペイ</div>
+                        <div class="balance-amount">¥12,450</div>
+                    </div>
+                    <div class="balance-actions">
+                        <button class="balance-btn">チャージ</button>
+                        <button class="balance-btn">送金</button>
+                        <button class="balance-btn">決済</button>
+                    </div>
+                </div>
+
+                <div class="asset-row">
+                    <div class="asset-label">クレジット残高</div>
+                    <div class="asset-amount">¥50,000</div>
+                </div>
+                <div class="asset-row">
+                    <div class="asset-label">ポイント</div>
+                    <div class="asset-amount">1,250P</div>
+                </div>
+
+                <h3 class="section-title">取引履歴</h3>
+                <div class="asset-row">
+                    <div>
+                        <div style="font-size: 16px; font-weight: 500; color: #222; margin-bottom: 4px;">商品購入</div>
+                        <div style="font-size: 13px; color: #666;">今日 14:30</div>
+                    </div>
+                    <div style="font-size: 16px; font-weight: 600; color: #ff333f;">-¥3,200</div>
+                </div>
+                <div class="asset-row">
+                    <div>
+                        <div style="font-size: 16px; font-weight: 500; color: #222; margin-bottom: 4px;">売上金受取</div>
+                        <div style="font-size: 13px; color: #666;">昨日 16:20</div>
+                    </div>
+                    <div style="font-size: 16px; font-weight: 600; color: #00b894;">+¥8,500</div>
+                </div>
+                <div class="asset-row">
+                    <div>
+                        <div style="font-size: 16px; font-weight: 500; color: #222; margin-bottom: 4px;">チャージ</div>
+                        <div style="font-size: 13px; color: #666;">3日前 12:15</div>
+                    </div>
+                    <div style="font-size: 16px; font-weight: 600; color: #00b894;">+¥10,000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Page Overlay -->
+        <div id="mypage-overlay" class="mypage-overlay" onclick="closeMyPage(event)">
+            <div class="mypage-panel">
+                <div class="mypage-header">
+                    <button class="mypage-close" onclick="closeMyPage()">×</button>
+                    <div class="mypage-title">マイページ</div>
+                </div>
+                <div class="mypage-content">
+                    <div class="mypage-profile">
+                        <div class="mypage-avatar">T</div>
+                        <div class="mypage-info">
+                            <div class="mypage-name">田中太郎</div>
+                            <div class="mypage-email">tanaka@example.com</div>
+                        </div>
+                    </div>
+
+                    <ul class="mypage-menu">
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">📝</div>
+                            <div class="mypage-menu-text">出品する</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">📦</div>
+                            <div class="mypage-menu-text">出品した商品</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">🛒</div>
+                            <div class="mypage-menu-text">購入した商品</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">⭐</div>
+                            <div class="mypage-menu-text">評価</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">👤</div>
+                            <div class="mypage-menu-text">プロフィール</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">📱</div>
+                            <div class="mypage-menu-text">本人確認</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">❓</div>
+                            <div class="mypage-menu-text">ヘルプ</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">⚙️</div>
+                            <div class="mypage-menu-text">設定</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                        <li class="mypage-menu-item">
+                            <div class="mypage-menu-icon">🚪</div>
+                            <div class="mypage-menu-text">ログアウト</div>
+                            <div class="mypage-menu-arrow">›</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar-wrapper">
+            <div class="tab-group glass-effect">
+                <button class="tab-item active" onclick="switchTab('home', this)">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 3L4 9v10c0 1.1.9 2 2 2h4v-7h4v7h4c1.1 0 2-.9 2-2V9l-8-6z"/>
+                        </svg>
+                    </div>
+                    <div>ホーム</div>
+                </button>
+                <button class="tab-item" onclick="switchTab('list', this)">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                        </svg>
+                    </div>
+                    <div>リスト</div>
+                </button>
+                <button class="tab-item" onclick="switchTab('auction', this)">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <div>オークション</div>
+                </button>
+                <button class="tab-item" onclick="switchTab('wallet', this)">
+                    <div class="tab-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 7V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h-7c-1.66 0-3-1.34-3-3v-4c0-1.66 1.34-3 3-3h7z"/>
+                            <circle cx="18" cy="12" r="1.5"/>
+                        </svg>
+                    </div>
+                    <div>おサイフ</div>
+                </button>
+            </div>
+            <button class="search-tab glass-effect" onclick="switchTab('search')">
+                <div class="search-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Authentication
+        (function() {
+            var KEY = 'auth_05';
+            var PASS = 'mirai';
+            if (sessionStorage.getItem(KEY) !== '1') {
+                var input = window.prompt('パスワードを入力してください');
+                if (input !== PASS) {
+                    document.documentElement.innerHTML = '<body style="display: flex; align-items: center; justify-content: center; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f0f0f0;">認証に失敗しました</body>';
+                    return;
+                } else {
+                    sessionStorage.setItem(KEY, '1');
+                }
+            }
+        })();
+
+        let currentScreen = 'home';
+        let FULL_HEIGHT = window.innerHeight;
+
+        function switchTab(tabName, tabElement) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // Remove active from all tabs
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show target screen
+            const targetScreen = document.getElementById('screen-' + tabName);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                currentScreen = tabName;
+            }
+
+            // Add active to clicked tab
+            if (tabElement) {
+                tabElement.classList.add('active');
+            }
+
+            // Haptic feedback
+            if ('vibrate' in navigator) {
+                navigator.vibrate(10);
+            }
+
+            // Handle scrolling to top
+            const screenContent = targetScreen?.querySelector('.screen-content');
+            if (screenContent) {
+                screenContent.scrollTop = 0;
+            }
+        }
+
+        function openMyPage() {
+            const overlay = document.getElementById('mypage-overlay');
+            overlay.classList.add('active');
+
+            if ('vibrate' in navigator) {
+                navigator.vibrate(10);
+            }
+        }
+
+        function closeMyPage(event) {
+            if (event && event.target !== document.getElementById('mypage-overlay') && event.target.className !== 'mypage-close') {
+                return;
+            }
+
+            const overlay = document.getElementById('mypage-overlay');
+            overlay.classList.remove('active');
+
+            if ('vibrate' in navigator) {
+                navigator.vibrate(5);
+            }
+        }
+
+        // Filter chips interaction
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('chip')) {
+                const container = e.target.closest('.filter-chips');
+                if (container) {
+                    const chips = container.querySelectorAll('.chip');
+                    chips.forEach(chip => chip.classList.remove('active'));
+                    e.target.classList.add('active');
+                }
+
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(5);
+                }
+            }
+        });
+
+        // Sub tabs interaction
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('subtab')) {
+                const container = e.target.closest('.subtab-bar');
+                if (container) {
+                    const tabs = container.querySelectorAll('.subtab');
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    e.target.classList.add('active');
+                }
+
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(5);
+                }
+            }
+        });
+
+        // Keyboard handling for search
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', function() {
+                const currentHeight = window.visualViewport.height;
+                const isKeyboardVisible = currentHeight < FULL_HEIGHT * 0.75;
+
+                const searchBar = document.querySelector('.search-float-bar');
+                const tabBar = document.querySelector('.tab-bar-wrapper');
+
+                if (isKeyboardVisible && currentScreen === 'search') {
+                    if (searchBar) {
+                        searchBar.style.transform = `translateY(-${FULL_HEIGHT - currentHeight}px)`;
+                    }
+                    if (tabBar) {
+                        tabBar.style.transform = 'translateY(100px)';
+                        tabBar.style.opacity = '0.3';
+                    }
+                } else {
+                    if (searchBar) {
+                        searchBar.style.transform = '';
+                    }
+                    if (tabBar) {
+                        tabBar.style.transform = '';
+                        tabBar.style.opacity = '';
+                    }
+                }
+            });
+        }
+
+        // Initialize with home screen active
+        switchTab('home');
+    </script>
+</body>
+</html>

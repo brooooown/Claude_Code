@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --mercari-red: #FF6B35;
+    --mercari-red-light: #FF8A65;
+    --mercari-red-dark: #E55722;
+    --background-primary: #FFFFFF;
+    --background-secondary: #F8F8F8;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: "Hiragino Sans", "ヒラギノ角ゴシック", "Yu Gothic", "YuGothic", "Meiryo", "Takahashi", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--text-primary);
+    background-color: var(--background-primary);
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  /* 8px grid system */
+  .grid-8 > * {
+    margin-bottom: 8px;
+  }
+
+  .grid-16 > * {
+    margin-bottom: 16px;
+  }
+
+  .grid-24 > * {
+    margin-bottom: 24px;
+  }
+}
+
+@layer components {
+  /* Mercari Button Styles */
+  .btn-mercari {
+    @apply bg-mercari-red text-white px-6 py-3 rounded-lg font-medium transition-all duration-200;
+  }
+
+  .btn-mercari:hover {
+    @apply bg-mercari-red-dark transform scale-105;
+  }
+
+  .btn-mercari:active {
+    @apply scale-100;
+  }
+
+  /* Search Bar Styles */
+  .search-bar {
+    @apply bg-white border border-gray-200 rounded-full px-4 py-3 text-base transition-all duration-300;
+  }
+
+  .search-bar:focus {
+    @apply outline-none ring-2 ring-mercari-red border-transparent;
+  }
+
+  /* Page Container */
+  .page-container {
+    @apply min-h-screen bg-background-primary;
+  }
+
+  /* Mobile-first responsive container */
+  .container-mercari {
+    @apply w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Tab Navigation */
+  .tab-item {
+    @apply flex flex-col items-center justify-center p-2 text-xs transition-colors duration-200;
+  }
+
+  .tab-item.active {
+    @apply text-mercari-red;
+  }
+
+  .tab-item.inactive {
+    @apply text-text-secondary;
+  }
+
+  /* Product Card */
+  .product-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden transition-transform duration-200;
+  }
+
+  .product-card:hover {
+    @apply transform scale-102 shadow-md;
+  }
+}
+
+@layer utilities {
+  /* Animation utilities */
+  .animate-page-enter {
+    animation: slideInRight 0.3s ease-out;
+  }
+
+  .animate-page-exit {
+    animation: slideOutLeft 0.2s ease-in;
+  }
+
+  .animate-bounce-tab {
+    animation: bounceTab 0.15s ease-out;
+  }
+
+  .animate-stagger {
+    animation: staggerIn 0.05s ease-out forwards;
+  }
+
+  /* Mobile-specific utilities */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Prevent horizontal scroll */
+  .no-scroll-x {
+    overflow-x: hidden;
+  }
+
+  /* Japanese text optimization */
+  .text-japanese {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}

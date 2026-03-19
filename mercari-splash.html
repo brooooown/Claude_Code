@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercari iOS Splash Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            background: #000;
+        }
+
+        /* iPhone Safe Area Simulation */
+        .ios-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            position: relative;
+            background: #000;
+            border-radius: 40px;
+            padding: 44px 0 34px 0;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        .splash-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+        }
+
+        /* Background Gradient Animation */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF6B9D 50%, #B185DB 100%);
+            opacity: 0;
+            animation: backgroundFade 0.3s ease-out 0.1s forwards;
+        }
+
+        /* Mercari Logo */
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 120px;
+            height: 120px;
+            background: #FF6B35;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            animation: logoEntrance 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .logo::after {
+            content: 'M';
+            animation: logoGlow 0.6s ease-in-out 0.3s forwards;
+        }
+
+        /* Floating Icons */
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: floatAround 1.5s ease-in-out 0.5s forwards;
+        }
+
+        .icon-1 {
+            top: 30%;
+            left: 20%;
+            animation-delay: 0.6s;
+        }
+
+        .icon-2 {
+            top: 35%;
+            right: 20%;
+            animation-delay: 0.8s;
+        }
+
+        .icon-3 {
+            bottom: 35%;
+            left: 15%;
+            animation-delay: 1.0s;
+        }
+
+        .icon-4 {
+            bottom: 30%;
+            right: 15%;
+            animation-delay: 1.2s;
+        }
+
+        /* Particle System */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .particle-1 { background: #FFD23F; top: 40%; left: 45%; animation: particleBurst1 1.5s ease-out 0.6s forwards; }
+        .particle-2 { background: #95E1D3; top: 45%; left: 55%; animation: particleBurst2 1.5s ease-out 0.7s forwards; }
+        .particle-3 { background: #8AC8FF; top: 55%; left: 40%; animation: particleBurst3 1.5s ease-out 0.8s forwards; }
+        .particle-4 { background: #C7E596; top: 50%; left: 60%; animation: particleBurst4 1.5s ease-out 0.9s forwards; }
+        .particle-5 { background: #FF8C42; top: 35%; left: 50%; animation: particleBurst5 1.5s ease-out 1.0s forwards; }
+
+        /* Screen Flash Effect */
+        .screen-flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            animation: screenFlash 0.4s ease-out 1.2s forwards;
+            pointer-events: none;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            opacity: 0;
+        }
+
+        .confetti-1 { background: #FF6B35; top: 10%; left: 30%; animation: confettiFall1 1.2s ease-out 1.5s forwards; }
+        .confetti-2 { background: #FF6B9D; top: 15%; left: 70%; animation: confettiFall2 1.2s ease-out 1.6s forwards; }
+        .confetti-3 { background: #B185DB; top: 10%; left: 50%; animation: confettiFall3 1.2s ease-out 1.7s forwards; }
+        .confetti-4 { background: #FFD23F; top: 5%; left: 20%; animation: confettiFall4 1.2s ease-out 1.8s forwards; }
+        .confetti-5 { background: #95E1D3; top: 12%; left: 80%; animation: confettiFall5 1.2s ease-out 1.9s forwards; }
+
+        /* Animations */
+        @keyframes backgroundFade {
+            to { opacity: 1; }
+        }
+
+        @keyframes logoEntrance {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+                box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes floatAround {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-10px) scale(1.1);
+            }
+            100% {
+                opacity: 0.8;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes particleBurst1 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            50% { opacity: 1; transform: translate(-30px, -40px) scale(1.5); }
+            100% { opacity: 0; transform: translate(-60px, -80px) scale(0); }
+        }
+
+        @keyframes particleBurst2 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            50% { opacity: 1; transform: translate(40px, -30px) scale(1.5); }
+            100% { opacity: 0; transform: translate(80px, -60px) scale(0); }
+        }
+
+        @keyframes particleBurst3 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            50% { opacity: 1; transform: translate(-25px, 35px) scale(1.5); }
+            100% { opacity: 0; transform: translate(-50px, 70px) scale(0); }
+        }
+
+        @keyframes particleBurst4 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            50% { opacity: 1; transform: translate(35px, 40px) scale(1.5); }
+            100% { opacity: 0; transform: translate(70px, 80px) scale(0); }
+        }
+
+        @keyframes particleBurst5 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            50% { opacity: 1; transform: translate(0, -50px) scale(1.5); }
+            100% { opacity: 0; transform: translate(0, -100px) scale(0); }
+        }
+
+        @keyframes screenFlash {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes confettiFall1 {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(400px) rotate(180deg); }
+        }
+
+        @keyframes confettiFall2 {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(450px) rotate(-180deg); }
+        }
+
+        @keyframes confettiFall3 {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(420px) rotate(360deg); }
+        }
+
+        @keyframes confettiFall4 {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(480px) rotate(-90deg); }
+        }
+
+        @keyframes confettiFall5 {
+            0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+            20% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(460px) rotate(270deg); }
+        }
+
+        /* Logo Wiggle Effect */
+        @keyframes logoWiggle {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            25% { transform: translate(-50%, -50%) rotate(2deg) scale(1.05); }
+            75% { transform: translate(-50%, -50%) rotate(-2deg) scale(1.05); }
+        }
+
+        /* Logo Spin Effect */
+        @keyframes logoSpin {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            50% { transform: translate(-50%, -50%) scale(1.3) rotate(180deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+        }
+
+        /* Apply wiggle and spin at specific times */
+        .logo.wiggle { animation: logoWiggle 0.3s ease-in-out 0.8s 3; }
+        .logo.spin { animation: logoSpin 0.6s ease-out 1.4s forwards; }
+
+        /* Final settle animation */
+        .logo.settle {
+            animation: logoSettle 0.6s ease-out 2.0s forwards;
+        }
+
+        @keyframes logoSettle {
+            0% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+            100% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+        }
+
+        /* Fade out animation for main app transition */
+        .fade-to-app {
+            animation: fadeToApp 0.2s ease-out 2.8s forwards;
+        }
+
+        @keyframes fadeToApp {
+            to { opacity: 0; }
+        }
+    </style>
+    <!-- Figma capture script -->
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+    <div class="ios-container">
+        <div class="splash-screen">
+            <!-- Background Gradient -->
+            <div class="background"></div>
+
+            <!-- Mercari Logo -->
+            <div class="logo" id="logo"></div>
+
+            <!-- Floating Icons -->
+            <div class="floating-icon icon-1">🛍️</div>
+            <div class="floating-icon icon-2">📦</div>
+            <div class="floating-icon icon-3">💝</div>
+            <div class="floating-icon icon-4">❤️</div>
+
+            <!-- Particles -->
+            <div class="particle particle-1"></div>
+            <div class="particle particle-2"></div>
+            <div class="particle particle-3"></div>
+            <div class="particle particle-4"></div>
+            <div class="particle particle-5"></div>
+
+            <!-- Screen Flash Effect -->
+            <div class="screen-flash"></div>
+
+            <!-- Confetti -->
+            <div class="confetti confetti-1"></div>
+            <div class="confetti confetti-2"></div>
+            <div class="confetti confetti-3"></div>
+            <div class="confetti confetti-4"></div>
+            <div class="confetti confetti-5"></div>
+        </div>
+    </div>
+
+    <script>
+        // Add additional animation classes at specific timings
+        const logo = document.getElementById('logo');
+
+        // Add wiggle effect at 0.8s
+        setTimeout(() => {
+            logo.classList.add('wiggle');
+        }, 800);
+
+        // Add spin effect at 1.4s
+        setTimeout(() => {
+            logo.classList.remove('wiggle');
+            logo.classList.add('spin');
+        }, 1400);
+
+        // Add settle effect at 2.0s
+        setTimeout(() => {
+            logo.classList.remove('spin');
+            logo.classList.add('settle');
+        }, 2000);
+
+        // Add fade to app transition at 2.8s
+        setTimeout(() => {
+            document.querySelector('.splash-screen').classList.add('fade-to-app');
+        }, 2800);
+
+        // Auto-restart animation every 4 seconds for demo
+        setInterval(() => {
+            location.reload();
+        }, 4000);
+    </script>
+</body>
+</html>

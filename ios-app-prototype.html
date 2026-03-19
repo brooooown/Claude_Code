@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>iOS App Prototype</title>
+    <link rel="stylesheet" href="ios-app-prototype.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 検索画面 -->
+        <div id="search" class="screen">
+            <div class="screen-header">
+                <div class="search-form">
+                    <input type="text" placeholder="何をお探しですか？" class="search-input">
+                    <button class="search-btn">検索</button>
+                </div>
+            </div>
+
+            <div class="screen-content">
+                <div class="filter-chips">
+                    <div class="chip active">すべて</div>
+                    <div class="chip">ファッション</div>
+                    <div class="chip">電子機器</div>
+                    <div class="chip">家具</div>
+                    <div class="chip">本・雑誌</div>
+                </div>
+
+                <div class="search-history">
+                    <h3>最近の検索</h3>
+                    <div class="history-cards">
+                        <div class="history-card">
+                            <img src="https://via.placeholder.com/60x60/f0f0f0/999?text=👕" alt="">
+                            <div class="history-text">
+                                <div class="history-title">Tシャツ</div>
+                                <div class="history-subtitle">300件の商品</div>
+                            </div>
+                        </div>
+                        <div class="history-card">
+                            <img src="https://via.placeholder.com/60x60/f0f0f0/999?text=📱" alt="">
+                            <div class="history-text">
+                                <div class="history-title">iPhone</div>
+                                <div class="history-subtitle">150件の商品</div>
+                            </div>
+                        </div>
+                        <div class="history-card">
+                            <img src="https://via.placeholder.com/60x60/f0f0f0/999?text=👟" alt="">
+                            <div class="history-text">
+                                <div class="history-title">スニーカー</div>
+                                <div class="history-subtitle">200件の商品</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trending-section">
+                    <h3>人気のキーワード</h3>
+                    <div class="trending-tags">
+                        <span class="tag">#ナイキ</span>
+                        <span class="tag">#ルイヴィトン</span>
+                        <span class="tag">#iPhone14</span>
+                        <span class="tag">#古着</span>
+                        <span class="tag">#カメラ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- リスト画面 -->
+        <div id="list" class="screen">
+            <div class="screen-header">
+                <h1>マイリスト</h1>
+            </div>
+
+            <div class="screen-content">
+                <div class="tab-bar-sub">
+                    <button class="tab-btn active">いいね</button>
+                    <button class="tab-btn">最近見た商品</button>
+                </div>
+
+                <div class="grid-3x3">
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/ff6b6b/fff?text=👕" alt="">
+                        <div class="price">¥2,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/4ecdc4/fff?text=👖" alt="">
+                        <div class="price">¥4,200</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/45b7d1/fff?text=👟" alt="">
+                        <div class="price">¥8,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/f9ca24/fff?text=⌚" alt="">
+                        <div class="price">¥15,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/6c5ce7/fff?text=👒" alt="">
+                        <div class="price">¥3,200</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/a55eea/fff?text=👜" alt="">
+                        <div class="price">¥22,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- オークション画面 -->
+        <div id="auction" class="screen">
+            <div class="screen-header">
+                <h1>オークション</h1>
+            </div>
+
+            <div class="screen-content">
+                <div class="carousel-section">
+                    <h3>注目のオークション</h3>
+                    <div class="carousel">
+                        <div class="carousel-card">
+                            <img src="https://via.placeholder.com/250x150/ff6b6b/fff?text=限定商品" alt="">
+                            <div class="carousel-info">
+                                <div class="title">限定スニーカー</div>
+                                <div class="price">現在価格: ¥45,000</div>
+                                <div class="time">残り 2時間</div>
+                            </div>
+                        </div>
+                        <div class="carousel-card">
+                            <img src="https://via.placeholder.com/250x150/4ecdc4/fff?text=人気" alt="">
+                            <div class="carousel-info">
+                                <div class="title">ヴィンテージ時計</div>
+                                <div class="price">現在価格: ¥120,000</div>
+                                <div class="time">残り 1日</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-chips">
+                    <div class="chip active">すべて</div>
+                    <div class="chip">終了間近</div>
+                    <div class="chip">人気</div>
+                    <div class="chip">新着</div>
+                </div>
+
+                <div class="grid-3x3">
+                    <div class="grid-item auction-item">
+                        <img src="https://via.placeholder.com/100x100/ff7675/fff?text=📱" alt="">
+                        <div class="price">¥25,000</div>
+                        <div class="auction-time">残り 3h</div>
+                    </div>
+                    <div class="grid-item auction-item">
+                        <img src="https://via.placeholder.com/100x100/74b9ff/fff?text=🎮" alt="">
+                        <div class="price">¥18,500</div>
+                        <div class="auction-time">残り 1d</div>
+                    </div>
+                    <div class="grid-item auction-item">
+                        <img src="https://via.placeholder.com/100x100/00b894/fff?text=💻" alt="">
+                        <div class="price">¥55,000</div>
+                        <div class="auction-time">残り 6h</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ウォレット画面 -->
+        <div id="wallet" class="screen">
+            <div class="screen-header">
+                <h1>おサイフ</h1>
+            </div>
+
+            <div class="screen-content">
+                <div class="merpay-card">
+                    <div class="card-header">
+                        <h2>メルペイ</h2>
+                        <div class="card-balance">¥12,450</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn">チャージ</button>
+                        <button class="action-btn">送金</button>
+                        <button class="action-btn">決済</button>
+                    </div>
+                </div>
+
+                <div class="wallet-sections">
+                    <div class="wallet-section">
+                        <h3>クレジットカード</h3>
+                        <div class="credit-card">
+                            <div class="card-info">
+                                <div class="card-number">**** **** **** 1234</div>
+                                <div class="card-name">TARO YAMADA</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wallet-section">
+                        <h3>取引履歴</h3>
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <div class="transaction-info">
+                                    <div class="transaction-title">商品購入</div>
+                                    <div class="transaction-date">今日 14:30</div>
+                                </div>
+                                <div class="transaction-amount">-¥3,200</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-info">
+                                    <div class="transaction-title">売上金受取</div>
+                                    <div class="transaction-date">昨日 16:20</div>
+                                </div>
+                                <div class="transaction-amount">+¥8,500</div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="transaction-info">
+                                    <div class="transaction-title">チャージ</div>
+                                    <div class="transaction-date">3日前 12:15</div>
+                                </div>
+                                <div class="transaction-amount">+¥10,000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ホーム画面 -->
+        <div id="home" class="screen active">
+            <div class="screen-header">
+                <h1>メルカリ</h1>
+                <button class="notification-btn">🔔</button>
+            </div>
+
+            <div class="screen-content">
+                <div class="tab-bar-sub">
+                    <button class="tab-btn active">すべて</button>
+                    <button class="tab-btn">いいね</button>
+                </div>
+
+                <div class="grid-3x3">
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/ff6b6b/fff?text=👕" alt="">
+                        <div class="price">¥1,200</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/4ecdc4/fff?text=📚" alt="">
+                        <div class="price">¥800</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/45b7d1/fff?text=🎮" alt="">
+                        <div class="price">¥15,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/f9ca24/fff?text=⌚" alt="">
+                        <div class="price">¥25,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/6c5ce7/fff?text=👜" alt="">
+                        <div class="price">¥12,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/a55eea/fff?text=🕶" alt="">
+                        <div class="price">¥8,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/26de81/fff?text=👟" alt="">
+                        <div class="price">¥18,000</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/fd79a8/fff?text=💄" alt="">
+                        <div class="price">¥3,500</div>
+                    </div>
+                    <div class="grid-item">
+                        <img src="https://via.placeholder.com/100x100/fdcb6e/fff?text=📱" alt="">
+                        <div class="price">¥45,000</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>トレンドキーワード</h3>
+                    <div class="trending-tags">
+                        <span class="tag">#ナイキ</span>
+                        <span class="tag">#古着</span>
+                        <span class="tag">#iPhone</span>
+                        <span class="tag">#ルイヴィトン</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>ブランド特集</h3>
+                    <div class="brand-grid">
+                        <div class="brand-item">
+                            <img src="https://via.placeholder.com/80x80/333/fff?text=Nike" alt="">
+                            <span>Nike</span>
+                        </div>
+                        <div class="brand-item">
+                            <img src="https://via.placeholder.com/80x80/333/fff?text=LV" alt="">
+                            <span>Louis Vuitton</span>
+                        </div>
+                        <div class="brand-item">
+                            <img src="https://via.placeholder.com/80x80/333/fff?text=Apple" alt="">
+                            <span>Apple</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ボトムナビゲーション -->
+        <div class="bottom-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="home">
+                    <div class="nav-icon">🏠</div>
+                    <span>ホーム</span>
+                </button>
+                <button class="nav-tab" data-tab="list">
+                    <div class="nav-icon">📋</div>
+                    <span>リスト</span>
+                </button>
+                <button class="nav-tab" data-tab="auction">
+                    <div class="nav-icon">🔨</div>
+                    <span>オークション</span>
+                </button>
+                <button class="nav-tab" data-tab="wallet">
+                    <div class="nav-icon">💳</div>
+                    <span>おサイフ</span>
+                </button>
+            </div>
+            <button class="search-tab" data-tab="search">
+                <div class="search-icon">🔍</div>
+            </button>
+        </div>
+    </div>
+
+    <script src="ios-app-prototype.js"></script>
+</body>
+</html>

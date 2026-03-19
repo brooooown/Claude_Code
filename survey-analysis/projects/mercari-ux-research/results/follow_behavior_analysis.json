@@ -1,0 +1,82 @@
+{
+  "analysis_date": "2026-03-17T12:40:09.072474",
+  "total_responses": 1655,
+  "follow_usage_analysis": {
+    "usage_distribution": {
+      "現在利用している": 1429,
+      "過去に利用していたが現在は使っていない": 133,
+      "その他": 93
+    },
+    "importance_distribution": {
+      "非常に重要である": 860,
+      "ある程度重要である": 557,
+      "どちらでもない": 88,
+      "その他": 87
+    }
+  },
+  "segment_follow_analysis": {
+    "buyer_usage": {
+      "その他": {
+        "1.Buyer Super heavy": 4.0625,
+        "2.Buyer Heavy": 3.3816425120772946,
+        "3.Buyer Middle": 6.779661016949152,
+        "4.Buyer Light": 7.57238307349666
+      },
+      "現在利用している": {
+        "1.Buyer Super heavy": 92.1875,
+        "2.Buyer Heavy": 91.54589371980676,
+        "3.Buyer Middle": 83.6864406779661,
+        "4.Buyer Light": 80.17817371937639
+      },
+      "過去に利用していたが現在は使っていない": {
+        "1.Buyer Super heavy": 3.75,
+        "2.Buyer Heavy": 5.072463768115942,
+        "3.Buyer Middle": 9.533898305084746,
+        "4.Buyer Light": 12.24944320712695
+      }
+    },
+    "follow_usage": {
+      "その他": {
+        "1.Follow Super Heavy (80+)": 3.1707317073170733,
+        "2.Follow Heavy (35-79)": 5.048076923076923,
+        "3.Follow Middle (18-34)": 5.517241379310345,
+        "4.Follow Light (1-17)": 8.9058524173028,
+        "5.No Follow": 0.0
+      },
+      "現在利用している": {
+        "1.Follow Super Heavy (80+)": 90.73170731707317,
+        "2.Follow Heavy (35-79)": 88.9423076923077,
+        "3.Follow Middle (18-34)": 85.97701149425288,
+        "4.Follow Light (1-17)": 79.38931297709924,
+        "5.No Follow": 100.0
+      },
+      "過去に利用していたが現在は使っていない": {
+        "1.Follow Super Heavy (80+)": 6.097560975609756,
+        "2.Follow Heavy (35-79)": 6.009615384615385,
+        "3.Follow Middle (18-34)": 8.505747126436782,
+        "4.Follow Light (1-17)": 11.704834605597965,
+        "5.No Follow": 0.0
+      }
+    }
+  },
+  "frequency_analysis": {
+    "distribution": {
+      "1日に1回以上見る": 177,
+      "2,3日に1回くらい見る": 69,
+      "その他": 22,
+      "1週間に1回くらい見る": 20
+    }
+  },
+  "motivation_analysis": {
+    "total_responses": 1181,
+    "keyword_analysis": {}
+  },
+  "platform_comparison": {
+    "youtube_frequency": {
+      "1日に1回以上見る": 177,
+      "2,3日に1回くらい見る": 69,
+      "その他": 22,
+      "1週間に1回くらい見る": 20
+    }
+  }
+}

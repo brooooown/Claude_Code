@@ -1,0 +1,339 @@
+{
+  "report_metadata": {
+    "generated_at": "2026-03-17T12:46:53.470537",
+    "total_responses": 1182,
+    "analysis_phases": [
+      "データ前処理",
+      "セグメント分析",
+      "フォロー行動分析",
+      "テキスト分析"
+    ],
+    "key_findings_count": 12
+  },
+  "executive_summary": {
+    "key_metrics": {
+      "total_responses": 1655,
+      "follow_usage_rate": 86.3,
+      "follow_importance_rate": 85.7,
+      "top_motivation": "新着・最新情報",
+      "top_motivation_rate": 64.0,
+      "buyer_follow_correlation": "strong"
+    },
+    "critical_findings": [
+      {
+        "finding": "フォロー機能の利用率が86.3%と非常に高い",
+        "impact": "high",
+        "insight": "ユーザーにとって不可欠な機能として確立済み"
+      },
+      {
+        "finding": "新着・最新情報が64.0%で最大の動機",
+        "impact": "high",
+        "insight": "リアルタイム性がフォロー価値の核心"
+      },
+      {
+        "finding": "購入頻度とフォロー行動に強い相関",
+        "impact": "medium",
+        "insight": "アクティブユーザーほどフォロー機能を活用"
+      },
+      {
+        "finding": "フォロー割引特典への言及あり",
+        "impact": "medium",
+        "insight": "経済的メリットも重要な動機の一つ"
+      }
+    ],
+    "strategic_recommendations": [
+      "リアルタイム性とパーソナライゼーションの強化",
+      "セグメント別カスタマイズ機能の導入",
+      "フォロー特典システムの拡充",
+      "アクティブユーザー向け高度機能の提供"
+    ]
+  },
+  "segment_strategies": {
+    "buyer_strategies": {
+      "1.Buyer Super heavy": {
+        "profile": "ヘビーバイヤー（最頻購入層）",
+        "characteristics": [
+          "購入頻度最高",
+          "フォロー活用率92.2%",
+          "女性61.3%",
+          "30代が中心"
+        ],
+        "pain_points": [
+          "大量情報の効率的管理",
+          "優先度付けの困難"
+        ],
+        "strategies": [
+          "プレミアムフォロー機能（多重フィルタリング）",
+          "AI推奨アルゴリズムの高度化",
+          "VIPユーザー向け先行情報提供",
+          "フォローリスト管理ツールの強化"
+        ],
+        "priority": "high"
+      },
+      "2.Buyer Heavy": {
+        "profile": "ヘビーバイヤー（高頻購入層）",
+        "characteristics": [
+          "購入頻度高",
+          "フォロー活用率91.5%",
+          "女性67.4%",
+          "30代が中心"
+        ],
+        "pain_points": [
+          "お気に入り出品者の新着チェック",
+          "価格比較の効率化"
+        ],
+        "strategies": [
+          "フォロー出品者の新着プッシュ通知強化",
+          "価格変動アラート機能",
+          "セール情報の優先配信",
+          "カテゴリ別フォロー管理"
+        ],
+        "priority": "high"
+      },
+      "3.Buyer Middle": {
+        "profile": "ミドルバイヤー（中程度購入層）",
+        "characteristics": [
+          "バランス型利用",
+          "フォロー活用率83.7%",
+          "女性60.6%",
+          "30代が中心"
+        ],
+        "pain_points": [
+          "購入判断の迷い",
+          "トレンド情報の取得"
+        ],
+        "strategies": [
+          "購入判断支援ツール（レビュー統合表示）",
+          "トレンドフォロー推奨機能",
+          "ソーシャルプルーフの強化",
+          "段階的エンゲージメント向上施策"
+        ],
+        "priority": "medium"
+      },
+      "4.Buyer Light": {
+        "profile": "ライトバイヤー（軽利用層）",
+        "characteristics": [
+          "購入頻度低",
+          "フォロー活用率80.2%",
+          "女性53.2%",
+          "30代が中心"
+        ],
+        "pain_points": [
+          "機能の複雑さ",
+          "フォロー価値の理解不足"
+        ],
+        "strategies": [
+          "シンプル化されたフォロー体験",
+          "オンボーディング強化",
+          "成功体験の創出（おすすめフォロー）",
+          "メリット訴求の明確化"
+        ],
+        "priority": "medium"
+      }
+    },
+    "follow_strategies": {
+      "1.Follow Super Heavy (80+)": {
+        "profile": "フォロースーパーヘビー（80人以上）",
+        "characteristics": [
+          "フォロー数最多",
+          "40代が30.2%",
+          "女性65.1%"
+        ],
+        "pain_points": [
+          "情報過多",
+          "フォロー管理の困難"
+        ],
+        "strategies": [
+          "フォローリスト整理支援機能",
+          "カテゴリ別フォロー表示",
+          "アクティブフォロー分析機能",
+          "フォロー整理の推奨機能"
+        ],
+        "priority": "high"
+      },
+      "2.Follow Heavy (35-79)": {
+        "profile": "フォローヘビー（35-79人）",
+        "characteristics": [
+          "フォロー数多",
+          "30代が31.5%",
+          "女性60.3%"
+        ],
+        "pain_points": [
+          "新着情報の見落とし",
+          "優先度の判断"
+        ],
+        "strategies": [
+          "インテリジェント新着表示",
+          "フォロー優先度設定機能",
+          "まとめ通知機能",
+          "フォロー効果の可視化"
+        ],
+        "priority": "high"
+      },
+      "3.Follow Middle (18-34)": {
+        "profile": "フォローミドル（18-34人）",
+        "characteristics": [
+          "フォロー数中程度",
+          "30代が30.1%",
+          "女性59.1%"
+        ],
+        "pain_points": [
+          "フォローすべき出品者の発見",
+          "機能活用の最適化"
+        ],
+        "strategies": [
+          "レコメンドフォロー機能強化",
+          "フォロー効果の分析表示",
+          "関連フォロー提案",
+          "フォロー成功事例の共有"
+        ],
+        "priority": "medium"
+      },
+      "4.Follow Light (1-17)": {
+        "profile": "フォローライト（1-17人）",
+        "characteristics": [
+          "フォロー数少",
+          "30代が30.3%",
+          "女性57.0%"
+        ],
+        "pain_points": [
+          "フォロー機能の理解不足",
+          "メリットの実感不足"
+        ],
+        "strategies": [
+          "フォロー機能のチュートリアル強化",
+          "メリット実感のための初回体験最適化",
+          "おすすめフォロー自動設定",
+          "フォロー効果の見える化"
+        ],
+        "priority": "medium"
+      }
+    }
+  },
+  "follow_improvements": {
+    "immediate_actions": [
+      {
+        "title": "新着情報配信の最適化",
+        "description": "最大動機（64.0%）である新着情報配信のリアルタイム性とパーソナライゼーション強化",
+        "implementation": [
+          "プッシュ通知タイミングの個人最適化",
+          "カテゴリ別新着情報フィルタリング",
+          "重要度に基づく情報優先表示"
+        ],
+        "impact": "high",
+        "effort": "medium",
+        "timeline": "3ヶ月"
+      },
+      {
+        "title": "フォロー特典システム拡充",
+        "description": "テキスト分析で発見された「フォロー割」などの特典ニーズに対応",
+        "implementation": [
+          "フォロワー限定割引システム",
+          "先行販売アクセス権",
+          "ポイント還元率アップ"
+        ],
+        "impact": "high",
+        "effort": "high",
+        "timeline": "6ヶ月"
+      }
+    ],
+    "medium_term_enhancements": [
+      {
+        "title": "インテリジェントフォロー管理",
+        "description": "AIを活用したフォローリスト管理とレコメンデーション",
+        "implementation": [
+          "フォロー効果分析ダッシュボード",
+          "自動フォロー整理提案",
+          "スマートカテゴリ分類"
+        ],
+        "impact": "medium",
+        "effort": "high",
+        "timeline": "9ヶ月"
+      },
+      {
+        "title": "情報収集効率化ツール",
+        "description": "49.0%が動機とする情報収集・チェック機能の強化",
+        "implementation": [
+          "フォロー先一括チェック機能",
+          "キーワードベース新着フィルタ",
+          "ウィッシュリスト連動機能"
+        ],
+        "impact": "medium",
+        "effort": "medium",
+        "timeline": "6ヶ月"
+      }
+    ],
+    "long_term_vision": [
+      {
+        "title": "ソーシャルコマース統合",
+        "description": "フォロー機能を核としたコミュニティドリブン購買体験",
+        "implementation": [
+          "フォロワー同士の交流機能",
+          "グループ購入機能",
+          "インフルエンサーマーケットプレイス"
+        ],
+        "impact": "high",
+        "effort": "very_high",
+        "timeline": "12ヶ月+"
+      }
+    ]
+  },
+  "priority_matrix": {
+    "high_impact_low_effort": [
+      {
+        "item": "新着通知タイミング最適化",
+        "rationale": "最大動機（64.0%）への対応、既存システム活用",
+        "estimated_effort": "low",
+        "expected_impact": "high"
+      },
+      {
+        "item": "フォロー機能オンボーディング改善",
+        "rationale": "ライトユーザー（23.7%）の活用促進",
+        "estimated_effort": "low",
+        "expected_impact": "medium"
+      }
+    ],
+    "high_impact_high_effort": [
+      {
+        "item": "フォロワー限定特典システム",
+        "rationale": "フォロー割ニーズへの対応、差別化価値創出",
+        "estimated_effort": "high",
+        "expected_impact": "high"
+      },
+      {
+        "item": "AIベースフォロー管理システム",
+        "rationale": "ヘビーユーザー（50.1%）の満足度向上",
+        "estimated_effort": "high",
+        "expected_impact": "high"
+      }
+    ],
+    "medium_impact_medium_effort": [
+      {
+        "item": "カテゴリ別フォロー表示",
+        "rationale": "情報整理ニーズ（49.0%）への対応",
+        "estimated_effort": "medium",
+        "expected_impact": "medium"
+      },
+      {
+        "item": "フォロー効果可視化",
+        "rationale": "フォロー価値の実感向上",
+        "estimated_effort": "medium",
+        "expected_impact": "medium"
+      }
+    ],
+    "implementation_roadmap": {
+      "phase_1": [
+        "新着通知最適化",
+        "オンボーディング改善"
+      ],
+      "phase_2": [
+        "カテゴリ別表示",
+        "フォロー効果可視化"
+      ],
+      "phase_3": [
+        "特典システム",
+        "AI管理システム"
+      ]
+    }
+  }
+}

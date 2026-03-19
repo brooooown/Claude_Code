@@ -1,0 +1,332 @@
+{
+  "analysis_date": "2026-03-17T12:39:13.495235",
+  "total_responses": 1655,
+  "segment_profiles": {
+    "Buyer segment": {
+      "4.Buyer Light": {
+        "count": 449,
+        "percentage": 27.129909365558913
+      },
+      "1.Buyer Super heavy": {
+        "count": 320,
+        "percentage": 19.335347432024168
+      },
+      "2.Buyer Heavy": {
+        "count": 414,
+        "percentage": 25.01510574018127
+      },
+      "3.Buyer Middle": {
+        "count": 472,
+        "percentage": 28.519637462235647
+      }
+    },
+    "Follow segment": {
+      "3.Follow Middle (18-34)": {
+        "count": 435,
+        "percentage": 26.283987915407852
+      },
+      "1.Follow Super Heavy (80+)": {
+        "count": 410,
+        "percentage": 24.773413897280967
+      },
+      "4.Follow Light (1-17)": {
+        "count": 393,
+        "percentage": 23.746223564954683
+      },
+      "2.Follow Heavy (35-79)": {
+        "count": 416,
+        "percentage": 25.135951661631424
+      },
+      "5.No Follow": {
+        "count": 1,
+        "percentage": 0.060422960725075525
+      }
+    }
+  },
+  "demographic_analysis": {
+    "あなたの職業として当てはまるものを一つだけお選びください。※職業が複数ある方は、主な収入源となっている職業をお選びください": {
+      "buyer_segment": {
+        "その他": {
+          "1.Buyer Super heavy": 22.5,
+          "2.Buyer Heavy": 20.77294685990338,
+          "3.Buyer Middle": 13.559322033898304,
+          "4.Buyer Light": 15.812917594654788
+        },
+        "パート・アルバイト": {
+          "1.Buyer Super heavy": 12.1875,
+          "2.Buyer Heavy": 15.70048309178744,
+          "3.Buyer Middle": 16.101694915254235,
+          "4.Buyer Light": 10.022271714922049
+        },
+        "会社員（正社員）": {
+          "1.Buyer Super heavy": 34.0625,
+          "2.Buyer Heavy": 34.29951690821256,
+          "3.Buyer Middle": 38.559322033898304,
+          "4.Buyer Light": 39.198218262806236
+        },
+        "学生（大学生・大学院生・専門学生）": {
+          "1.Buyer Super heavy": 4.6875,
+          "2.Buyer Heavy": 4.830917874396135,
+          "3.Buyer Middle": 8.686440677966102,
+          "4.Buyer Light": 10.913140311804009
+        },
+        "専業主婦・主夫": {
+          "1.Buyer Super heavy": 14.0625,
+          "2.Buyer Heavy": 12.077294685990339,
+          "3.Buyer Middle": 9.533898305084746,
+          "4.Buyer Light": 10.690423162583519
+        },
+        "自営業・フリーランス": {
+          "1.Buyer Super heavy": 12.5,
+          "2.Buyer Heavy": 12.318840579710146,
+          "3.Buyer Middle": 13.559322033898304,
+          "4.Buyer Light": 13.3630289532294
+        }
+      },
+      "follow_segment": {
+        "その他": {
+          "1.Follow Super Heavy (80+)": 18.78048780487805,
+          "2.Follow Heavy (35-79)": 16.105769230769234,
+          "3.Follow Middle (18-34)": 19.080459770114942,
+          "4.Follow Light (1-17)": 16.793893129770993,
+          "5.No Follow": 0.0
+        },
+        "パート・アルバイト": {
+          "1.Follow Super Heavy (80+)": 17.073170731707318,
+          "2.Follow Heavy (35-79)": 13.221153846153847,
+          "3.Follow Middle (18-34)": 12.643678160919542,
+          "4.Follow Light (1-17)": 11.450381679389313,
+          "5.No Follow": 0.0
+        },
+        "会社員（正社員）": {
+          "1.Follow Super Heavy (80+)": 29.024390243902438,
+          "2.Follow Heavy (35-79)": 43.269230769230774,
+          "3.Follow Middle (18-34)": 37.47126436781609,
+          "4.Follow Light (1-17)": 37.404580152671755,
+          "5.No Follow": 0.0
+        },
+        "学生（大学生・大学院生・専門学生）": {
+          "1.Follow Super Heavy (80+)": 5.853658536585367,
+          "2.Follow Heavy (35-79)": 5.528846153846153,
+          "3.Follow Middle (18-34)": 7.816091954022989,
+          "4.Follow Light (1-17)": 11.195928753180661,
+          "5.No Follow": 0.0
+        },
+        "専業主婦・主夫": {
+          "1.Follow Super Heavy (80+)": 13.902439024390246,
+          "2.Follow Heavy (35-79)": 9.615384615384617,
+          "3.Follow Middle (18-34)": 11.264367816091953,
+          "4.Follow Light (1-17)": 10.432569974554708,
+          "5.No Follow": 100.0
+        },
+        "自営業・フリーランス": {
+          "1.Follow Super Heavy (80+)": 15.365853658536585,
+          "2.Follow Heavy (35-79)": 12.259615384615383,
+          "3.Follow Middle (18-34)": 11.724137931034482,
+          "4.Follow Light (1-17)": 12.72264631043257,
+          "5.No Follow": 0.0
+        }
+      }
+    },
+    "あなたの年代をお選びください。": {
+      "buyer_segment": {
+        "20代": {
+          "1.Buyer Super heavy": 10.9375,
+          "2.Buyer Heavy": 10.144927536231885,
+          "3.Buyer Middle": 16.94915254237288,
+          "4.Buyer Light": 21.603563474387528
+        },
+        "30代": {
+          "1.Buyer Super heavy": 30.0,
+          "2.Buyer Heavy": 28.985507246376812,
+          "3.Buyer Middle": 30.720338983050848,
+          "4.Buyer Light": 28.507795100222715
+        },
+        "40代": {
+          "1.Buyer Super heavy": 28.749999999999996,
+          "2.Buyer Heavy": 28.26086956521739,
+          "3.Buyer Middle": 25.635593220338983,
+          "4.Buyer Light": 25.83518930957684
+        },
+        "50代": {
+          "1.Buyer Super heavy": 17.5,
+          "2.Buyer Heavy": 18.357487922705314,
+          "3.Buyer Middle": 16.52542372881356,
+          "4.Buyer Light": 12.694877505567929
+        },
+        "60代": {
+          "1.Buyer Super heavy": 7.187499999999999,
+          "2.Buyer Heavy": 9.178743961352657,
+          "3.Buyer Middle": 5.508474576271186,
+          "4.Buyer Light": 4.8997772828507795
+        },
+        "その他": {
+          "1.Buyer Super heavy": 5.625,
+          "2.Buyer Heavy": 5.072463768115942,
+          "3.Buyer Middle": 4.661016949152542,
+          "4.Buyer Light": 6.45879732739421
+        }
+      },
+      "follow_segment": {
+        "20代": {
+          "1.Follow Super Heavy (80+)": 14.390243902439023,
+          "2.Follow Heavy (35-79)": 11.778846153846153,
+          "3.Follow Middle (18-34)": 16.32183908045977,
+          "4.Follow Light (1-17)": 19.083969465648856,
+          "5.No Follow": 0.0
+        },
+        "30代": {
+          "1.Follow Super Heavy (80+)": 26.34146341463415,
+          "2.Follow Heavy (35-79)": 31.490384615384613,
+          "3.Follow Middle (18-34)": 30.114942528735632,
+          "4.Follow Light (1-17)": 30.279898218829516,
+          "5.No Follow": 0.0
+        },
+        "40代": {
+          "1.Follow Super Heavy (80+)": 30.24390243902439,
+          "2.Follow Heavy (35-79)": 26.201923076923077,
+          "3.Follow Middle (18-34)": 25.057471264367813,
+          "4.Follow Light (1-17)": 26.463104325699742,
+          "5.No Follow": 0.0
+        },
+        "50代": {
+          "1.Follow Super Heavy (80+)": 17.317073170731707,
+          "2.Follow Heavy (35-79)": 18.028846153846153,
+          "3.Follow Middle (18-34)": 16.551724137931036,
+          "4.Follow Light (1-17)": 12.46819338422392,
+          "5.No Follow": 0.0
+        },
+        "60代": {
+          "1.Follow Super Heavy (80+)": 7.317073170731707,
+          "2.Follow Heavy (35-79)": 7.6923076923076925,
+          "3.Follow Middle (18-34)": 5.977011494252873,
+          "4.Follow Light (1-17)": 5.089058524173027,
+          "5.No Follow": 100.0
+        },
+        "その他": {
+          "1.Follow Super Heavy (80+)": 4.390243902439024,
+          "2.Follow Heavy (35-79)": 4.807692307692308,
+          "3.Follow Middle (18-34)": 5.977011494252873,
+          "4.Follow Light (1-17)": 6.615776081424936,
+          "5.No Follow": 0.0
+        }
+      }
+    },
+    "あなたの性別をお選びください。": {
+      "buyer_segment": {
+        "その他": {
+          "1.Buyer Super heavy": 1.25,
+          "2.Buyer Heavy": 0.4830917874396135,
+          "3.Buyer Middle": 0.423728813559322,
+          "4.Buyer Light": 1.3363028953229399
+        },
+        "女性": {
+          "1.Buyer Super heavy": 61.25000000000001,
+          "2.Buyer Heavy": 67.3913043478261,
+          "3.Buyer Middle": 60.59322033898306,
+          "4.Buyer Light": 53.229398663697104
+        },
+        "男性": {
+          "1.Buyer Super heavy": 37.5,
+          "2.Buyer Heavy": 32.125603864734295,
+          "3.Buyer Middle": 38.983050847457626,
+          "4.Buyer Light": 45.43429844097995
+        }
+      },
+      "follow_segment": {
+        "その他": {
+          "1.Follow Super Heavy (80+)": 1.2195121951219512,
+          "2.Follow Heavy (35-79)": 0.2403846153846154,
+          "3.Follow Middle (18-34)": 0.9195402298850575,
+          "4.Follow Light (1-17)": 1.0178117048346056,
+          "5.No Follow": 0.0
+        },
+        "女性": {
+          "1.Follow Super Heavy (80+)": 65.1219512195122,
+          "2.Follow Heavy (35-79)": 60.33653846153846,
+          "3.Follow Middle (18-34)": 59.08045977011495,
+          "4.Follow Light (1-17)": 56.99745547073791,
+          "5.No Follow": 100.0
+        },
+        "男性": {
+          "1.Follow Super Heavy (80+)": 33.65853658536586,
+          "2.Follow Heavy (35-79)": 39.42307692307692,
+          "3.Follow Middle (18-34)": 40.0,
+          "4.Follow Light (1-17)": 41.98473282442748,
+          "5.No Follow": 0.0
+        }
+      }
+    }
+  },
+  "combined_segments": {
+    "4.Buyer Light × 4.Follow Light (1-17)": {
+      "count": 146,
+      "percentage": 8.821752265861027
+    },
+    "4.Buyer Light × 3.Follow Middle (18-34)": {
+      "count": 131,
+      "percentage": 7.9154078549848945
+    },
+    "2.Buyer Heavy × 1.Follow Super Heavy (80+)": {
+      "count": 130,
+      "percentage": 7.854984894259818
+    },
+    "3.Buyer Middle × 3.Follow Middle (18-34)": {
+      "count": 127,
+      "percentage": 7.673716012084592
+    },
+    "3.Buyer Middle × 2.Follow Heavy (35-79)": {
+      "count": 124,
+      "percentage": 7.492447129909366
+    }
+  },
+  "crosstab": {
+    "1.Follow Super Heavy (80+)": {
+      "1.Buyer Super heavy": 108,
+      "2.Buyer Heavy": 130,
+      "3.Buyer Middle": 102,
+      "4.Buyer Light": 70,
+      "All": 410
+    },
+    "2.Follow Heavy (35-79)": {
+      "1.Buyer Super heavy": 77,
+      "2.Buyer Heavy": 113,
+      "3.Buyer Middle": 124,
+      "4.Buyer Light": 102,
+      "All": 416
+    },
+    "3.Follow Middle (18-34)": {
+      "1.Buyer Super heavy": 81,
+      "2.Buyer Heavy": 96,
+      "3.Buyer Middle": 127,
+      "4.Buyer Light": 131,
+      "All": 435
+    },
+    "4.Follow Light (1-17)": {
+      "1.Buyer Super heavy": 54,
+      "2.Buyer Heavy": 75,
+      "3.Buyer Middle": 118,
+      "4.Buyer Light": 146,
+      "All": 393
+    },
+    "5.No Follow": {
+      "1.Buyer Super heavy": 0,
+      "2.Buyer Heavy": 0,
+      "3.Buyer Middle": 1,
+      "4.Buyer Light": 0,
+      "All": 1
+    },
+    "All": {
+      "1.Buyer Super heavy": 320,
+      "2.Buyer Heavy": 414,
+      "3.Buyer Middle": 472,
+      "4.Buyer Light": 449,
+      "All": 1655
+    }
+  },
+  "statistical_test": {
+    "chi2": 69.51614664589506,
+    "p_value": 0.001,
+    "significance": true
+  }
+}
