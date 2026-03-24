@@ -1,699 +1,738 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function() {
+      var KEY = 'auth_05';
+      var PASS = 'mirai';
+      if (sessionStorage.getItem(KEY) !== '1') {
+        var input = window.prompt('パスワードを入力してください');
+        if (input !== PASS) {
+          document.documentElement.innerHTML = '<body style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;">認証に失敗しました</body>';
+          throw new Error('Unauthorized');
+        }
+        sessionStorage.setItem(KEY, '1');
+      }
+    })();
+  </script>
   <title>Pattern 2 - Luxury Collection</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html, body {
       width: 100%;
-      height: 100vh;
-      height: 100svh;
+      height: 100dvh;
+      background: #fff;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-      background: #000;
-      color: white;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
     }
 
-    /* Liquid Glass Background - Luxury Theme */
-    .background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-      z-index: -2;
-    }
-
-    .background::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.15), transparent 60%),
-                  radial-gradient(circle at 70% 70%, rgba(138, 43, 226, 0.1), transparent 50%),
-                  radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.05), transparent 40%);
-      z-index: -1;
-    }
-
-    /* Main Container */
-    .main-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      height: 100svh;
-    }
-
-    /* Screen Container */
-    .screen-container {
-      flex: 1;
+    .device {
       position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding-bottom: 20px;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      overflow: hidden;
     }
 
-    .screen-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Screen Content */
+    /* ── Screens ── */
     .screen {
       display: none;
-      padding: 20px;
-      padding-bottom: 120px;
-      min-height: calc(100vh - 120px);
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
+    .screen.active { display: block; }
 
-    .screen.active {
-      display: block;
-    }
-
-    /* Home Screen Styles - Luxury Theme */
-    .home-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .home-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #ffd700, #ffa500, #ff8c00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .home-subtitle {
-      font-size: 14px;
-      color: rgba(255, 215, 0, 0.8);
-    }
-
-    /* Trending Keywords - Luxury Style */
-    .trending-section {
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 15px;
+    /* ════════════════════════════════════════
+       LUXURY LIQUID GLASS TAB BAR
+    ════════════════════════════════════════ */
+    .tab-bar-wrapper {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
       display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #ffd700;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 12px 16px;
+      z-index: 100;
+      gap: 10px;
     }
 
-    .trending-keywords {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .keyword-tag {
-      background: rgba(255, 215, 0, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      border-radius: 20px;
-      padding: 8px 16px;
-      font-size: 14px;
-      color: #ffd700;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-
-    .keyword-tag:hover {
-      background: rgba(255, 215, 0, 0.2);
-      transform: translateY(-1px);
-    }
-
-    /* Product Grid - Premium Style */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .product-item {
-      aspect-ratio: 1;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
-      padding: 16px;
+    /* ── Luxury glass mixin ── */
+    .glass-pill {
       position: relative;
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(48px) saturate(220%) brightness(1.08);
+      -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(1.08);
+
+      /* luxury gradient: gold tint */
+      background:
+        linear-gradient(
+          175deg,
+          rgba(255,248,220,0.85) 0%,
+          rgba(255,245,205,0.50) 40%,
+          rgba(255,248,220,0.65) 100%
+        );
+      border-radius: 9999px;
+
+      /* luxury border and shadows */
+      border: 1px solid rgba(255,215,0,0.4);
+      box-shadow:
+        0 12px 40px rgba(255,193,7,0.15),
+        0 4px 12px rgba(255,193,7,0.10),
+        0 1px 3px rgba(0,0,0,0.08),
+        inset 0 1.5px 0 rgba(255,255,255,1.0),
+        inset 0 -1px 0 rgba(255,193,7,0.08),
+        inset 0 0 20px rgba(255,215,0,0.20);
+
       overflow: hidden;
     }
 
-    .product-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, transparent, rgba(255, 215, 0, 0.1));
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    .glass-pill-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(
+          175deg,
+          rgba(255,215,0,0.15) 0%,
+          rgba(255,215,0,0.0) 60%,
+          rgba(255,215,0,0.10) 100%
+        );
+      backdrop-filter: blur(60px) saturate(180%);
+      -webkit-backdrop-filter: blur(60px) saturate(180%);
     }
 
-    .product-item:hover {
-      transform: translateY(-2px);
-      background: rgba(0, 0, 0, 0.6);
-      border-color: rgba(255, 215, 0, 0.4);
+    /* ── Left group: luxury pills ── */
+    .tab-left-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
     }
 
-    .product-item:hover::before {
-      opacity: 1;
-    }
-
-    .product-emoji {
-      font-size: 32px;
-      margin-bottom: 8px;
-      filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
-    }
-
-    .product-name {
-      font-size: 12px;
-      font-weight: 500;
-      text-align: center;
-      line-height: 1.2;
-      color: #ffd700;
-    }
-
-    /* Brand Section - Premium Style */
-    .brand-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .brand-item {
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      border-radius: 20px;
-      padding: 20px;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
-    }
-
-    .brand-item:hover {
-      background: rgba(0, 0, 0, 0.6);
-      transform: translateY(-2px);
-      border-color: rgba(255, 215, 0, 0.4);
-    }
-
-    .brand-emoji {
-      font-size: 40px;
-      display: block;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
-    }
-
-    .brand-name {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: #ffd700;
-    }
-
-    .brand-desc {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.3;
-    }
-
-    /* Luxury Features Section */
-    .feature-cards {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .feature-card {
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      border-radius: 16px;
-      padding: 20px;
+    .tab-app-pill {
+      position: relative;
+      height: 52px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
-      gap: 16px;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s ease;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.20s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      user-select: none;
     }
 
-    .feature-card:hover {
-      background: rgba(0, 0, 0, 0.5);
-      transform: translateX(4px);
-      border-color: rgba(255, 215, 0, 0.4);
+    .tab-app-pill:hover { transform: scale(1.025) translateY(-1px); }
+    .tab-app-pill:active { transform: scale(0.98) translateY(0px); }
+
+    .tab-app-icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .tab-app-icon svg { width: 18px; height: 18px; fill: #fff; }
+
+    .tab-app-text { color: #8B4513; font-size: 16px; font-weight: 600; flex-shrink: 0; }
+
+    /* ── Utility pill (camera, mic) ── */
+    .tab-util-pill {
+      width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.20s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      user-select: none;
+    }
+    .tab-util-pill:hover { transform: scale(1.05) translateY(-2px); }
+    .tab-util-pill:active { transform: scale(0.95) translateY(0px); }
+    .tab-util-pill svg { width: 24px; height: 24px; fill: #8B4513; }
+
+    /* ── Right group: main nav tabs ── */
+    .tab-right-group {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
     }
 
-    .feature-icon {
-      font-size: 32px;
-      filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+    .tab-main-pill {
+      height: 64px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.20s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      user-select: none;
     }
+    .tab-main-pill:hover { transform: scale(1.015) translateY(-1px); }
+    .tab-main-pill:active { transform: scale(0.985) translateY(0px); }
 
-    .feature-content h3 {
-      font-size: 16px;
-      font-weight: 600;
-      color: #ffd700;
-      margin-bottom: 4px;
+    .tab-main-icons { display: flex; align-items: center; gap: 20px; }
+    .tab-main-icon {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      transition: all 0.15s ease; cursor: pointer; padding: 4px 2px;
+      border-radius: 6px;
     }
+    .tab-main-icon:hover { background: rgba(255,215,0,0.1); }
 
-    .feature-content p {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.3;
+    .tab-main-icon svg { width: 24px; height: 24px; transition: fill 0.15s ease; }
+    .tab-main-icon.active svg { fill: #DAA520; }
+    .tab-main-icon:not(.active) svg { fill: #8E8E93; }
+
+    .tab-main-label {
+      font-size: 10px; font-weight: 500; line-height: 1;
+      transition: color 0.15s ease;
     }
+    .tab-main-icon.active .tab-main-label { color: #DAA520; }
+    .tab-main-icon:not(.active) .tab-main-label { color: #8E8E93; }
 
-    /* Liquid Glass Tab Bar */
-    .tab-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 84px;
-      padding: 8px 0 env(safe-area-inset-bottom);
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(48px) saturate(220%) brightness(1.08);
-      -webkit-backdrop-filter: blur(48px) saturate(220%) brightness(1.08);
-      border-top: 1px solid rgba(255, 215, 0, 0.15);
+    /* ── Top Nav ── */
+    .top-nav {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      padding-top: calc(env(safe-area-inset-top) + 8px);
       z-index: 100;
     }
 
-    .tab-container {
+    #screen-search.active ~ .top-nav { display: none; }
+
+    .nav-right {
       display: flex;
-      height: 100%;
       align-items: center;
-      justify-content: space-around;
-      padding: 0 20px;
+      gap: 6px;
     }
 
-    .tab-item {
+    .nav-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-decoration: none;
-      color: rgba(255, 255, 255, 0.6);
-      transition: all 0.3s ease;
-      padding: 8px;
-      border-radius: 12px;
-      min-width: 50px;
+      flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,248,220,0.9), rgba(255,245,205,0.9));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 2px 14px rgba(255,193,7,0.25),
+        0 1px 4px rgba(255,193,7,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      transition: opacity 0.12s ease, transform 0.12s ease;
     }
 
-    .tab-item.active {
-      color: #ffd700;
-      background: rgba(255, 215, 0, 0.1);
+    .nav-icon-btn:active {
+      opacity: 0.65;
+      transform: scale(0.88);
     }
 
-    .tab-icon {
+    .nav-icon-btn svg {
       width: 24px;
       height: 24px;
-      margin-bottom: 4px;
-      transition: transform 0.3s ease;
+      display: block;
+      fill: #8B4513;
     }
 
-    .tab-item.active .tab-icon {
-      transform: scale(1.1);
+    .nav-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      flex-shrink: 0;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,248,220,0.9), rgba(255,245,205,0.9));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 2px 14px rgba(255,193,7,0.25),
+        0 1px 4px rgba(255,193,7,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.12s ease, transform 0.12s ease;
     }
 
-    .tab-label {
-      font-size: 10px;
-      font-weight: 500;
-      line-height: 1;
+    .nav-avatar:active {
+      opacity: 0.65;
+      transform: scale(0.88);
     }
 
-    /* Other Screens Simple Styling */
-    .other-screen {
+    .nav-avatar img {
+      width: 24px;
+      height: 24px;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* ════════════════════════════════════════
+       LUXURY HOME SCREEN
+    ════════════════════════════════════════ */
+    #screen-home { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); overflow: hidden; }
+
+    .home-scroll {
+      position: absolute; inset: 0;
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding-top: calc(env(safe-area-inset-top) + 64px);
+      padding-bottom: 100px;
+    }
+    .home-scroll::-webkit-scrollbar { display: none; }
+
+    .home-logo { text-align: center; padding: 16px 0 20px; }
+    .home-logo-img { width: 28px; height: 28px; }
+
+    .home-search-wrapper { padding: 0 16px 16px; }
+    .home-search-box {
+      position: relative;
+      background: linear-gradient(135deg, rgba(255,248,220,0.7), rgba(255,245,205,0.7));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 12px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(255,193,7,0.1);
+    }
+    .home-search-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .home-search-placeholder {
+      flex: 1;
+      font-size: 16px;
+      color: #8B4513;
+      pointer-events: none;
+    }
+
+    .home-section { margin-bottom: 20px; }
+    .home-sec-hd { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 12px; }
+    .home-sec-title { font-size: 18px; font-weight: 700; color: #8B4513; }
+    .home-sec-link { font-size: 14px; color: #DAA520; cursor: pointer; }
+
+    .home-keywords { display: flex; gap: 8px; padding: 0 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-bottom: 20px; }
+    .home-keywords::-webkit-scrollbar { display: none; }
+    .home-keyword {
+      flex-shrink: 0;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, rgba(255,248,220,0.8), rgba(255,245,205,0.8));
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 20px;
+      font-size: 14px;
+      color: #8B4513;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      backdrop-filter: blur(10px);
+    }
+    .home-keyword:hover {
+      background: linear-gradient(135deg, rgba(255,248,220,0.9), rgba(255,245,205,0.9));
+      border-color: rgba(255,215,0,0.4);
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      padding: 0 16px;
+    }
+
+    .home-tile {
+      position: relative;
+      aspect-ratio: 1;
+      background: #f8f8f8;
+      overflow: hidden;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid rgba(255,215,0,0.2);
+      box-shadow: 0 2px 8px rgba(255,193,7,0.1);
+    }
+
+    .home-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+
+    .home-tile:hover img {
+      transform: scale(1.05);
+    }
+
+    .home-tile-price {
+      position: absolute;
+      bottom: 6px;
+      left: 6px;
+      background: linear-gradient(135deg, rgba(218,165,32,0.95), rgba(255,215,0,0.95));
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .home-tile-heart {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, rgba(255,248,220,0.95), rgba(255,245,205,0.95));
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid rgba(255,215,0,0.3);
+    }
+
+    .home-tile-heart:hover { background: rgba(255,215,0,0.2); }
+    .home-tile-heart svg { transition: fill 0.15s ease, stroke 0.15s ease; }
+
+    /* ════════════════════════════════════════
+       OTHER SCREENS (PLACEHOLDER)
+    ════════════════════════════════════════ */
+    .screen-placeholder {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      height: 100%;
       text-align: center;
-      height: calc(100vh - 160px);
       padding: 40px;
     }
 
-    .screen-icon {
-      font-size: 64px;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.3));
-    }
-
-    .screen-title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #ffd700, #ffa500);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .screen-description {
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.5;
-      max-width: 300px;
-    }
-
-    /* Responsive */
-    @media (max-width: 375px) {
-      .screen {
-        padding: 16px;
-      }
-
-      .product-grid {
-        gap: 8px;
-      }
-
-      .product-emoji {
-        font-size: 28px;
-      }
-
-      .product-name {
-        font-size: 11px;
-      }
-    }
+    .placeholder-icon { font-size: 64px; margin-bottom: 16px; }
+    .placeholder-title { font-size: 24px; font-weight: 700; color: #8B4513; margin-bottom: 8px; }
+    .placeholder-desc { font-size: 16px; color: #8E8E93; line-height: 1.4; }
   </style>
 </head>
 <body>
-  <!-- Liquid Glass Background -->
-  <div class="background"></div>
+  <div class="device">
 
-  <div class="main-container">
-    <!-- Screen Container -->
-    <div class="screen-container">
-      <!-- Home Screen -->
-      <div class="screen active" id="home">
-        <div class="home-header">
-          <h1 class="home-title">Pattern 2</h1>
-          <p class="home-subtitle">ラグジュアリーコレクション</p>
+    <!-- ═══ LUXURY HOME SCREEN ═══ -->
+    <div id="screen-home" class="screen active">
+      <div class="home-scroll">
+        <div class="home-logo">
+          <svg class="home-logo-img" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="url(#luxuryGradient)"/>
+            <path d="M8 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="luxuryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
 
-        <!-- Trending Keywords -->
-        <div class="trending-section">
-          <h2 class="section-title">
-            <span>✨</span>
-            プレミアムセレクション
-          </h2>
-          <div class="trending-keywords">
-            <a href="#" class="keyword-tag">高級時計</a>
-            <a href="#" class="keyword-tag">ラグジュアリー</a>
-            <a href="#" class="keyword-tag">限定版</a>
-            <a href="#" class="keyword-tag">職人工芸</a>
-            <a href="#" class="keyword-tag">コレクターズ</a>
+        <div class="home-search-wrapper">
+          <div class="home-search-box" onclick="showScreen('search')">
+            <svg class="home-search-icon" viewBox="0 0 20 20" fill="#8B4513">
+              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+            </svg>
+            <span class="home-search-placeholder">ラグジュアリー商品を検索</span>
           </div>
         </div>
 
-        <!-- Luxury Features -->
-        <div class="trending-section">
-          <h2 class="section-title">
-            <span>👑</span>
-            プレミアム体験
-          </h2>
-          <div class="feature-cards">
-            <a href="#" class="feature-card">
-              <div class="feature-icon">🎁</div>
-              <div class="feature-content">
-                <h3>専属コンシェルジュ</h3>
-                <p>お客様専属のスペシャリストがご案内</p>
+        <div class="home-keywords">
+          <div class="home-keyword">高級腕時計</div>
+          <div class="home-keyword">ダイヤモンド</div>
+          <div class="home-keyword">ヴィンテージ</div>
+          <div class="home-keyword">限定版</div>
+          <div class="home-keyword">職人工芸</div>
+        </div>
+
+        <div class="home-section">
+          <div class="home-sec-hd">
+            <div class="home-sec-title">プレミアムコレクション</div>
+            <div class="home-sec-link">すべて見る</div>
+          </div>
+
+          <div class="home-grid">
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1594534475808-b18fc33b045e?w=300&h=300&fit=crop&crop=center" alt="ロレックス腕時計">
+              <div class="home-tile-price">¥450,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 016-1 3 3 0 016 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
               </div>
-            </a>
-            <a href="#" class="feature-card">
-              <div class="feature-icon">🚁</div>
-              <div class="feature-content">
-                <h3>VIP配送サービス</h3>
-                <p>24時間以内のプレミアム配送</p>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=300&fit=crop&crop=center" alt="ダイヤモンドリング">
+              <div class="home-tile-price">¥980,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
               </div>
-            </a>
-            <a href="#" class="feature-card">
-              <div class="feature-icon">🔒</div>
-              <div class="feature-content">
-                <h3>真贋保証システム</h3>
-                <p>専門家による厳格な品質管理</p>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop&crop=center" alt="エルメスバッグ">
+              <div class="home-tile-price">¥1,200,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
               </div>
-            </a>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop&crop=center" alt="シャネル香水">
+              <div class="home-tile-price">¥85,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1583292650898-7d22cd27ca6f?w=300&h=300&fit=crop&crop=center" alt="カルティエネックレス">
+              <div class="home-tile-price">¥620,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=300&fit=crop&crop=center" alt="スニーカー限定版">
+              <div class="home-tile-price">¥180,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1556906781-9a412961c28c?w=300&h=300&fit=crop&crop=center" alt="ヴィンテージカメラ">
+              <div class="home-tile-price">¥320,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=300&h=300&fit=crop&crop=center" alt="高級ワイン">
+              <div class="home-tile-price">¥125,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="home-tile">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=center" alt="クラシックカー">
+              <div class="home-tile-price">¥8,500,000</div>
+              <div class="home-tile-heart" onclick="toggleHeart(this)">
+                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 12S1 8 1 4.5a3 3 0 616-1 3 3 0 616 1C13 8 7 12 7 12z" stroke="#DAA520" stroke-width="1.3"/>
+                </svg>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <!-- Product Grid -->
-        <div class="trending-section">
-          <h2 class="section-title">
-            <span>💎</span>
-            厳選アイテム
-          </h2>
-          <div class="product-grid">
-            <a href="#" class="product-item">
-              <div class="product-emoji">⌚</div>
-              <div class="product-name">スイス製<br>高級時計</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">💍</div>
-              <div class="product-name">ダイヤモンド<br>ジュエリー</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">👜</div>
-              <div class="product-name">ハンドクラフト<br>バッグ</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">🍾</div>
-              <div class="product-name">ヴィンテージ<br>ワイン</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">🎨</div>
-              <div class="product-name">限定版<br>アートワーク</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">🏎️</div>
-              <div class="product-name">クラシック<br>カーパーツ</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">📸</div>
-              <div class="product-name">ヴィンテージ<br>カメラ</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">🎭</div>
-              <div class="product-name">アンティーク<br>コレクション</div>
-            </a>
-            <a href="#" class="product-item">
-              <div class="product-emoji">🎪</div>
-              <div class="product-name">エクスクルーシブ<br>体験</div>
-            </a>
-          </div>
-        </div>
-
-        <!-- Brand Section -->
-        <div class="trending-section">
-          <h2 class="section-title">
-            <span>🏆</span>
-            プレステージブランド
-          </h2>
-          <div class="brand-grid">
-            <a href="#" class="brand-item">
-              <span class="brand-emoji">👑</span>
-              <div class="brand-name">ロイヤルコレクション</div>
-              <div class="brand-desc">王室御用達ブランド</div>
-            </a>
-            <a href="#" class="brand-item">
-              <span class="brand-emoji">💎</span>
-              <div class="brand-name">マエストロ工房</div>
-              <div class="brand-desc">職人手作りの逸品</div>
-            </a>
-            <a href="#" class="brand-item">
-              <span class="brand-emoji">🌟</span>
-              <div class="brand-name">エターナル</div>
-              <div class="brand-desc">永続的価値のアイテム</div>
-            </a>
-            <a href="#" class="brand-item">
-              <span class="brand-emoji">🎖️</span>
-              <div class="brand-name">ヘリテージ</div>
-              <div class="brand-desc">伝統と革新の融合</div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Auction Screen -->
-      <div class="screen" id="auction">
-        <div class="other-screen">
-          <div class="screen-icon">🏆</div>
-          <h1 class="screen-title">オークション</h1>
-          <p class="screen-description">限定アイテムや貴重な商品をオークションで見つけよう</p>
-        </div>
-      </div>
-
-      <!-- Sell Screen -->
-      <div class="screen" id="sell">
-        <div class="other-screen">
-          <div class="screen-icon">💰</div>
-          <h1 class="screen-title">出品</h1>
-          <p class="screen-description">あなたの大切なアイテムを簡単に出品できます</p>
-        </div>
-      </div>
-
-      <!-- Wallet Screen -->
-      <div class="screen" id="wallet">
-        <div class="other-screen">
-          <div class="screen-icon">👛</div>
-          <h1 class="screen-title">おサイフ</h1>
-          <p class="screen-description">安全で便利な決済システムでスムーズなお取引</p>
-        </div>
-      </div>
-
-      <!-- Search Screen -->
-      <div class="screen" id="search">
-        <div class="other-screen">
-          <div class="screen-icon">🔍</div>
-          <h1 class="screen-title">検索</h1>
-          <p class="screen-description">欲しい商品を素早く見つけることができます</p>
         </div>
       </div>
     </div>
 
-    <!-- Liquid Glass Tab Bar -->
-    <div class="tab-bar">
-      <div class="tab-container">
-        <a href="#" class="tab-item active" data-tab="home">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.1L1 12h3v9h6v-6h4v6h6v-9h3L12 2.1zm0 2.691l6 5.4V19h-2v-6H8v6H6v-9.809l6-5.4z"/>
-          </svg>
-          <span class="tab-label">ホーム</span>
-        </a>
+    <!-- ═══ AUCTION SCREEN ═══ -->
+    <div id="screen-auction" class="screen">
+      <div class="screen-placeholder">
+        <div class="placeholder-icon">🏆</div>
+        <div class="placeholder-title">オークション</div>
+        <div class="placeholder-desc">限定アイテムや貴重な商品をオークションで見つけよう</div>
+      </div>
+    </div>
 
-        <a href="#" class="tab-item" data-tab="auction">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M7.5 4A5.5 5.5 0 0 0 2 9.5c0 .5.09 1 .22 1.5H6.3l1.27-3.37c.3-.8 1.48-.8 1.78 0L10.62 11h2.78c.13-.5.22-1 .22-1.5A5.5 5.5 0 0 0 7.5 4zm9.77 8H13.7l-1.27 3.37c-.3.8-1.48.8-1.78 0L9.38 12H6.6c.13.5.22 1 .22 1.5a5.5 5.5 0 0 0 11 0c0-.5-.09-1-.22-1.5z"/>
-          </svg>
-          <span class="tab-label">オークション</span>
-        </a>
+    <!-- ═══ SELL SCREEN ═══ -->
+    <div id="screen-sell" class="screen">
+      <div class="screen-placeholder">
+        <div class="placeholder-icon">💰</div>
+        <div class="placeholder-title">出品</div>
+        <div class="placeholder-desc">あなたの大切なアイテムを簡単に出品できます</div>
+      </div>
+    </div>
 
-        <a href="#" class="tab-item" data-tab="sell">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
-          </svg>
-          <span class="tab-label">出品</span>
-        </a>
+    <!-- ═══ WALLET SCREEN ═══ -->
+    <div id="screen-wallet" class="screen">
+      <div class="screen-placeholder">
+        <div class="placeholder-icon">👛</div>
+        <div class="placeholder-title">おサイフ</div>
+        <div class="placeholder-desc">安全で便利な決済システムでスムーズなお取引</div>
+      </div>
+    </div>
 
-        <a href="#" class="tab-item" data-tab="wallet">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21 8V7a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v1zm0 2H3v7a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-7zm-5 4a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-          </svg>
-          <span class="tab-label">おサイフ</span>
-        </a>
+    <!-- ═══ SEARCH SCREEN ═══ -->
+    <div id="screen-search" class="screen">
+      <div class="screen-placeholder">
+        <div class="placeholder-icon">🔍</div>
+        <div class="placeholder-title">検索</div>
+        <div class="placeholder-desc">欲しい商品を素早く見つけることができます</div>
+      </div>
+    </div>
 
-        <a href="#" class="tab-item" data-tab="search">
-          <svg class="tab-icon" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    <!-- ═══ TOP NAV ═══ -->
+    <div class="top-nav">
+      <div></div>
+      <div class="nav-right">
+        <div class="nav-icon-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H9V7H21V9Z"/>
           </svg>
-          <span class="tab-label">検索</span>
-        </a>
+        </div>
+        <div class="nav-avatar">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=48&h=48&fit=crop&crop=face" alt="Avatar">
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ LUXURY LIQUID GLASS TAB BAR ═══ -->
+    <div class="tab-bar-wrapper">
+      <div class="tab-left-group">
+        <div class="glass-pill tab-app-pill">
+          <div class="glass-pill-bg"></div>
+          <div class="tab-app-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="tab-app-text">Pattern 2</div>
+        </div>
+
+        <div class="glass-pill tab-util-pill">
+          <div class="glass-pill-bg"></div>
+          <svg viewBox="0 0 24 24">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2v11z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+
+        <div class="glass-pill tab-util-pill">
+          <div class="glass-pill-bg"></div>
+          <svg viewBox="0 0 24 24">
+            <path d="M12 1L15 7H22L16 12L18 20L12 15L6 20L8 12L2 7H9L12 1Z"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="tab-right-group">
+        <div class="glass-pill tab-main-pill">
+          <div class="glass-pill-bg"></div>
+          <div class="tab-main-icons">
+            <div class="tab-main-icon active" data-screen="home">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2.1L1 12h3v9h6v-6h4v6h6v-9h3L12 2.1z"/>
+              </svg>
+              <div class="tab-main-label">ホーム</div>
+            </div>
+
+            <div class="tab-main-icon" data-screen="auction">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 2v11h10V2H7zM9 4h6v7H9V4z"/>
+                <path d="M5 14h14v8H5v-8z"/>
+              </svg>
+              <div class="tab-main-label">オークション</div>
+            </div>
+
+            <div class="tab-main-icon" data-screen="sell">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="16"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+              </svg>
+              <div class="tab-main-label">出品</div>
+            </div>
+
+            <div class="tab-main-icon" data-screen="wallet">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 8V7a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v1h18z"/>
+                <path d="M3 10v7a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-7H3z"/>
+                <circle cx="16" cy="14" r="1"/>
+              </svg>
+              <div class="tab-main-label">おサイフ</div>
+            </div>
+
+            <div class="tab-main-icon" data-screen="search">
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <div class="tab-main-label">検索</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // セッション認証
-    if (sessionStorage.getItem('auth_05') !== '1') {
-      const pass = prompt('パスワードを入力してください (ヒント: mirai)');
-      if (pass !== 'mirai') {
-        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#fff;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">認証に失敗しました</div>';
-      } else {
-        sessionStorage.setItem('auth_05', '1');
-      }
+    // Tab switching functionality
+    function showScreen(screenName) {
+      document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+      document.getElementById(`screen-${screenName}`).classList.add('active');
+
+      document.querySelectorAll('.tab-main-icon').forEach(icon => icon.classList.remove('active'));
+      document.querySelector(`[data-screen="${screenName}"]`).classList.add('active');
     }
 
-    // タブ切り替え機能
-    const tabItems = document.querySelectorAll('.tab-item');
-    const screens = document.querySelectorAll('.screen');
-
-    tabItems.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        // アクティブタブを更新
-        tabItems.forEach(item => item.classList.remove('active'));
-        tab.classList.add('active');
-
-        // スクリーンを切り替え
-        const targetTab = tab.dataset.tab;
-        screens.forEach(screen => {
-          screen.classList.remove('active');
-          if (screen.id === targetTab) {
-            screen.classList.add('active');
-          }
-        });
-
-        // タップフィードバック
-        tab.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-          tab.style.transform = 'scale(1)';
-        }, 150);
+    // Tab click handlers
+    document.querySelectorAll('.tab-main-icon').forEach(icon => {
+      icon.addEventListener('click', () => {
+        const screenName = icon.dataset.screen;
+        showScreen(screenName);
       });
     });
 
-    // Visual Viewport API対応（キーボード表示時の対応）
-    if (window.visualViewport) {
-      function handleViewportChange() {
-        const tabBar = document.querySelector('.tab-bar');
-        const viewport = window.visualViewport;
-
-        if (viewport.height < window.innerHeight * 0.75) {
-          // キーボードが表示されている
-          tabBar.style.transform = `translateY(${window.innerHeight - viewport.height}px)`;
-        } else {
-          // キーボードが非表示
-          tabBar.style.transform = 'translateY(0)';
-        }
+    // Heart toggle functionality
+    function toggleHeart(heartElement) {
+      const svg = heartElement.querySelector('svg path');
+      if (svg.getAttribute('fill') === 'none' || !svg.getAttribute('fill')) {
+        svg.setAttribute('fill', '#DAA520');
+        svg.setAttribute('stroke', '#DAA520');
+      } else {
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', '#DAA520');
       }
-
-      window.visualViewport.addEventListener('resize', handleViewportChange);
     }
 
-    // インタラクティブ効果
-    document.querySelectorAll('.product-item, .brand-item, .keyword-tag, .feature-card').forEach(item => {
-      item.addEventListener('touchstart', () => {
-        item.style.transform = 'scale(0.95)';
+    // Add click animations
+    document.querySelectorAll('.home-tile').forEach(tile => {
+      tile.addEventListener('touchstart', () => {
+        tile.style.transform = 'scale(0.95)';
       });
 
-      item.addEventListener('touchend', () => {
+      tile.addEventListener('touchend', () => {
         setTimeout(() => {
-          item.style.transform = '';
+          tile.style.transform = '';
         }, 150);
       });
     });
