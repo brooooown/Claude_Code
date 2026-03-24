@@ -47,17 +47,25 @@
       line-height: 1.6;
     }
 
+    .pattern-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
     .btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       background: rgba(255, 255, 255, 0.2);
       color: white;
       text-decoration: none;
-      padding: 15px 30px;
+      padding: 18px 30px;
       border-radius: 15px;
       font-size: 1.1rem;
-      font-weight: 500;
+      font-weight: 600;
       border: 1px solid rgba(255, 255, 255, 0.3);
       transition: all 0.3s ease;
       backdrop-filter: blur(10px);
@@ -68,6 +76,24 @@
       background: rgba(255, 255, 255, 0.3);
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn.dark {
+      background: rgba(30, 30, 30, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn.dark:hover {
+      background: rgba(30, 30, 30, 0.8);
+    }
+
+    .btn.colorful {
+      background: linear-gradient(135deg, rgba(255,107,107,0.8), rgba(78,205,196,0.8));
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .btn.colorful:hover {
+      background: linear-gradient(135deg, rgba(255,107,107,0.9), rgba(78,205,196,0.9));
     }
 
     .icon {
@@ -115,17 +141,33 @@
     <h1>iOS App Prototype</h1>
     <p>iOS風のアプリプロトタイプを実装したWebアプリケーション<br>リキッドグラス・デザインとマルチスクリーン設計</p>
 
-    <a href="./mirai-navi/" class="btn">
-      <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-      </svg>
-      プロトタイプを開く
-    </a>
+    <div class="pattern-buttons">
+      <a href="./pattern-1/" class="btn">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        </svg>
+        Pattern 1
+      </a>
+
+      <a href="./pattern-2/" class="btn dark">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69z"/>
+        </svg>
+        Pattern 2
+      </a>
+
+      <a href="./pattern-3/" class="btn colorful">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L9 1L3 7V9H21Z"/>
+        </svg>
+        Pattern 3
+      </a>
+    </div>
 
     <div class="features">
-      <div class="feature">ガラスモーフィズム効果</div>
-      <div class="feature">マルチスクリーン設計</div>
-      <div class="feature">ハプティックフィードバック</div>
+      <div class="feature">3つの異なるデザインパターン</div>
+      <div class="feature">Figmaデザイン反映済み</div>
+      <div class="feature">リキッドグラス・ナビゲーション</div>
       <div class="feature">レスポンシブ対応</div>
     </div>
   </div>

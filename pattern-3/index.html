@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function() {
+      var KEY = 'auth_05';
+      var PASS = 'mirai';
+      if (sessionStorage.getItem(KEY) !== '1') {
+        var input = window.prompt('パスワードを入力してください');
+        if (input !== PASS) {
+          document.documentElement.innerHTML = '<body style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;">認証に失敗しました</body>';
+          throw new Error('Unauthorized');
+        }
+        sessionStorage.setItem(KEY, '1');
+      }
+    })();
+  </script>
+  <title>iOS App Prototype - Pattern 3</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      background: #fff;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+
+    .device {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    /* ── Screens ── */
+    .screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: #fff;
+    }
+    .screen.active { display: block; }
+
+    /* ════════════════════════════════════════
+       FIGMA NAVIGATION BAR - Pattern 3
+    ════════════════════════════════════════ */
+    .tab-bar-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    .tab-group-pill {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding-right: 12px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(90deg, rgba(247,247,247,1) 0%, rgba(247,247,247,1) 100%);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 296px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+    }
+
+    .tab-nav {
+      display: flex;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .tab-nav li {
+      flex: 1;
+      display: flex;
+    }
+
+    .tab-nav button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 6px 8px 5px;
+      gap: 1px;
+      cursor: pointer;
+      position: relative;
+      border-radius: 100px;
+    }
+
+    .tab-nav button.active {
+      background: #ededed;
+    }
+
+    .tab-nav button svg {
+      width: 24px;
+      height: 24px;
+      fill: #333;
+    }
+
+    .tab-nav button span {
+      font-size: 10px;
+      font-weight: bold;
+      color: #333;
+      line-height: 12px;
+    }
+
+    .tab-nav button:not(.active) span {
+      font-weight: 500;
+    }
+
+    .search-pill {
+      width: 56px;
+      height: 56px;
+      border-radius: 296px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(90deg, rgba(247,247,247,1) 0%, rgba(247,247,247,1) 100%);
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+    }
+
+    .search-btn {
+      width: 100%;
+      height: 100%;
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .search-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: #333;
+    }
+
+    /* ────────────────────────────────────────
+       HOME SCREEN CONTENT (Pattern 3 - Dense Grid)
+    ──────────────────────────────────────── */
+    .home-content {
+      padding: 48px 0 100px;
+      height: 100%;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    .subtab-navigation {
+      display: flex;
+      padding: 8px 16px;
+      gap: 8px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .subtab-btn {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .subtab-btn.active {
+      background: #333;
+      color: #fff;
+      border-color: #333;
+    }
+
+    .subtab-content {
+      display: none;
+    }
+
+    .subtab-content.active {
+      display: block;
+    }
+
+    .grid-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      padding: 0 16px;
+    }
+
+    .grid-section {
+      width: 100%;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .section-title {
+      color: #333;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .item-tile {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .item-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .item-thumbnail {
+      width: 100%;
+      height: 160px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    .overlay-toggle {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .overlay-toggle::after {
+      content: "♡";
+      color: white;
+      font-size: 12px;
+    }
+
+    .item-content {
+      padding: 8px;
+    }
+
+    .item-title {
+      color: #333;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.4;
+      margin-bottom: 4px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      min-height: 32px;
+    }
+
+    .item-price {
+      color: #333;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .promotion-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 0 16px 32px;
+      color: white;
+      text-align: center;
+    }
+
+    .promotion-section h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .promotion-section p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* Other screens styling */
+    .screen:not(.home) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+
+    <!-- ══════════════════════════════════════
+         HOME SCREEN (Pattern 3 - Dense Grid Layout)
+    ══════════════════════════════════════ -->
+    <div class="screen home active">
+      <div class="home-content">
+        <!-- Subtab Navigation -->
+        <div class="subtab-navigation">
+          <button class="subtab-btn active" data-subtab="all">すべて</button>
+          <button class="subtab-btn" data-subtab="electronics">家電</button>
+          <button class="subtab-btn" data-subtab="fashion">ファッション</button>
+        </div>
+
+        <!-- すべて Content -->
+        <div class="subtab-content active" id="all">
+          <div class="grid-sections">
+            <div class="grid-section">
+              <div class="section-header">
+                <h3 class="section-title">注目のアイテム</h3>
+              </div>
+              <div class="item-grid">
+                <div class="item-tile">
+                  <div class="item-thumbnail">🎧</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Sony WH-1000XM5 ワイヤレスヘッドホン</div>
+                    <div class="item-price">¥35,800</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">📱</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">iPhone 15 Pro Max 256GB ナチュラルチタニウム</div>
+                    <div class="item-price">¥189,800</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">👟</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Nike Air Jordan 1 Retro High OG</div>
+                    <div class="item-price">¥24,800</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">⌚</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Apple Watch Series 9 GPS 45mm</div>
+                    <div class="item-price">¥59,800</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="promotion-section">
+              <h3>限定セール開催中</h3>
+              <p>人気商品が最大50%オフ</p>
+            </div>
+
+            <div class="grid-section">
+              <div class="section-header">
+                <h3 class="section-title">新着商品</h3>
+              </div>
+              <div class="item-grid">
+                <div class="item-tile">
+                  <div class="item-thumbnail">💻</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">MacBook Air M3 13インチ</div>
+                    <div class="item-price">¥164,800</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">🎮</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">PlayStation 5 CFI-2000A01</div>
+                    <div class="item-price">¥66,980</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">📷</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Canon EOS R8 ミラーレス一眼</div>
+                    <div class="item-price">¥248,000</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">🎸</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Fender Player Stratocaster</div>
+                    <div class="item-price">¥89,800</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-section">
+              <div class="section-header">
+                <h3 class="section-title">人気カテゴリー</h3>
+              </div>
+              <div class="item-grid">
+                <div class="item-tile">
+                  <div class="item-thumbnail">👕</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Supreme Box Logo Hoodie</div>
+                    <div class="item-price">¥45,000</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">👜</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Louis Vuitton ネヴァーフル MM</div>
+                    <div class="item-price">¥198,000</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">🏠</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Dyson V15 Detect コードレス掃除機</div>
+                    <div class="item-price">¥89,800</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">📚</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">鬼滅の刃 全巻セット 1-23巻</div>
+                    <div class="item-price">¥9,800</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 家電 Content -->
+        <div class="subtab-content" id="electronics">
+          <div class="grid-sections">
+            <div class="grid-section">
+              <div class="section-header">
+                <h3 class="section-title">人気の家電</h3>
+              </div>
+              <div class="item-grid">
+                <div class="item-tile">
+                  <div class="item-thumbnail">📺</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Sony BRAVIA XRJ-65X90K</div>
+                    <div class="item-price">¥198,000</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">❄️</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Panasonic 冷蔵庫 NR-F607HPX</div>
+                    <div class="item-price">¥248,000</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ファッション Content -->
+        <div class="subtab-content" id="fashion">
+          <div class="grid-sections">
+            <div class="grid-section">
+              <div class="section-header">
+                <h3 class="section-title">トレンドファッション</h3>
+              </div>
+              <div class="item-grid">
+                <div class="item-tile">
+                  <div class="item-thumbnail">👗</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Zara ワンピース</div>
+                    <div class="item-price">¥8,990</div>
+                  </div>
+                </div>
+                <div class="item-tile">
+                  <div class="item-thumbnail">👠</div>
+                  <div class="overlay-toggle"></div>
+                  <div class="item-content">
+                    <div class="item-title">Christian Louboutin パンプス</div>
+                    <div class="item-price">¥89,800</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         OTHER SCREENS (unchanged)
+    ══════════════════════════════════════ -->
+    <div class="screen auction">オークション画面</div>
+    <div class="screen sell">出品画面</div>
+    <div class="screen wallet">おサイフ画面</div>
+    <div class="screen search">検索画面</div>
+
+    <!-- ══════════════════════════════════════
+         FIGMA NAVIGATION BAR
+    ══════════════════════════════════════ -->
+    <div class="tab-bar-wrapper">
+      <div class="tab-group-pill">
+        <ul class="tab-nav">
+          <li>
+            <button class="tab-btn active" data-tab="home">
+              <svg viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              </svg>
+              <span>ホーム</span>
+            </button>
+          </li>
+          <li>
+            <button class="tab-btn" data-tab="auction">
+              <svg viewBox="0 0 24 24">
+                <path d="M11.15,3.4L9.83,4.72L15.11,10L9.83,15.28L11.15,16.6L17.75,10L11.15,3.4Z"/>
+              </svg>
+              <span>オークション</span>
+            </button>
+          </li>
+          <li>
+            <button class="tab-btn" data-tab="sell">
+              <svg viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+              </svg>
+              <span>出品</span>
+            </button>
+          </li>
+          <li>
+            <button class="tab-btn" data-tab="wallet">
+              <svg viewBox="0 0 24 24">
+                <path d="M21,18V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H20A2,2 0 0,0 18,8V16A2,2 0 0,0 20,18M20,8V16H18V8H20Z"/>
+              </svg>
+              <span>おさいふ</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="search-pill">
+        <button class="search-btn" data-tab="search">
+          <svg viewBox="0 0 24 24">
+            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab-btn, .search-btn');
+    const screens = document.querySelectorAll('.screen');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+
+        // Remove active from all
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        screens.forEach(screen => screen.classList.remove('active'));
+
+        // Add active to current
+        button.classList.add('active');
+        document.querySelector(`.screen.${targetTab}`).classList.add('active');
+
+        // Haptic feedback
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      });
+    });
+
+    // Subtab switching
+    const subtabButtons = document.querySelectorAll('.subtab-btn');
+    const subtabContents = document.querySelectorAll('.subtab-content');
+
+    subtabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetSubtab = button.getAttribute('data-subtab');
+
+        // Remove active from all subtabs
+        subtabButtons.forEach(btn => btn.classList.remove('active'));
+        subtabContents.forEach(content => content.classList.remove('active'));
+
+        // Add active to current
+        button.classList.add('active');
+        document.getElementById(targetSubtab).classList.add('active');
+      });
+    });
+
+    // Heart toggle functionality
+    document.querySelectorAll('.overlay-toggle').forEach(toggle => {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (toggle.style.opacity === '1') {
+          toggle.style.opacity = '0.6';
+          toggle.style.backgroundColor = 'rgba(0,0,0,0.6)';
+        } else {
+          toggle.style.opacity = '1';
+          toggle.style.backgroundColor = '#ff4757';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

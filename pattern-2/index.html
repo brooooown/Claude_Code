@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function() {
+      var KEY = 'auth_05';
+      var PASS = 'mirai';
+      if (sessionStorage.getItem(KEY) !== '1') {
+        var input = window.prompt('パスワードを入力してください');
+        if (input !== PASS) {
+          document.documentElement.innerHTML = '<body style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#666;">認証に失敗しました</body>';
+          throw new Error('Unauthorized');
+        }
+        sessionStorage.setItem(KEY, '1');
+      }
+    })();
+  </script>
+  <title>iOS App Prototype - Pattern 2</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      background: #fff;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+
+    .device {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    /* ── Screens ── */
+    .screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: #fff;
+    }
+    .screen.active { display: block; }
+
+    /* ════════════════════════════════════════
+       FIGMA NAVIGATION BAR - Pattern 2
+    ════════════════════════════════════════ */
+    .tab-bar-wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    .tab-group-pill {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding-right: 12px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(90deg, rgba(247,247,247,1) 0%, rgba(247,247,247,1) 100%);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 296px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+    }
+
+    .tab-nav {
+      display: flex;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .tab-nav li {
+      flex: 1;
+      display: flex;
+    }
+
+    .tab-nav button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 6px 8px 5px;
+      gap: 1px;
+      cursor: pointer;
+      position: relative;
+      border-radius: 100px;
+    }
+
+    .tab-nav button.active {
+      background: #ededed;
+    }
+
+    .tab-nav button svg {
+      width: 24px;
+      height: 24px;
+      fill: #333;
+    }
+
+    .tab-nav button span {
+      font-size: 10px;
+      font-weight: bold;
+      color: #333;
+      line-height: 12px;
+    }
+
+    .tab-nav button:not(.active) span {
+      font-weight: 500;
+    }
+
+    .search-pill {
+      width: 56px;
+      height: 56px;
+      border-radius: 296px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(90deg, rgba(247,247,247,1) 0%, rgba(247,247,247,1) 100%);
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.14);
+    }
+
+    .search-btn {
+      width: 100%;
+      height: 100%;
+      background: none;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .search-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: #333;
+    }
+
+    /* ────────────────────────────────────────
+       HOME SCREEN CONTENT (Pattern 2 - Subtabs)
+    ──────────────────────────────────────── */
+    .home-content {
+      padding: 48px 0 100px;
+      height: 100%;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    .subtab-navigation {
+      display: flex;
+      padding: 8px 16px;
+      gap: 8px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .subtab-btn {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .subtab-btn.active {
+      background: #333;
+      color: #fff;
+      border-color: #333;
+    }
+
+    .subtab-content {
+      display: none;
+      padding: 0 16px;
+    }
+
+    .subtab-content.active {
+      display: block;
+    }
+
+    .content-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .content-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e9ecef;
+    }
+
+    .section-title {
+      color: #333;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .content-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .content-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #e0e0e0;
+      transition: all 0.2s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #999;
+      font-size: 12px;
+    }
+
+    /* Other screens styling */
+    .screen:not(.home) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+
+    <!-- ══════════════════════════════════════
+         HOME SCREEN (Pattern 2 - Subtabs)
+    ══════════════════════════════════════ -->
+    <div class="screen home active">
+      <div class="home-content">
+        <!-- Subtab Navigation -->
+        <div class="subtab-navigation">
+          <button class="subtab-btn active" data-subtab="recommend">おすすめ</button>
+          <button class="subtab-btn" data-subtab="likes">いいね！</button>
+          <button class="subtab-btn" data-subtab="following">フォロー中</button>
+        </div>
+
+        <!-- おすすめ Content -->
+        <div class="subtab-content active" id="recommend">
+          <div class="content-sections">
+            <div class="content-section">
+              <h3 class="section-title">今日のピックアップ</h3>
+              <div class="content-cards">
+                <div class="content-card">
+                  <div class="card-title">Apple Watch Series 9</div>
+                  <div class="card-description">最新のヘルストラッキング機能付き</div>
+                  <div class="card-meta">
+                    <span>¥45,800</span>
+                    <span>2時間前</span>
+                  </div>
+                </div>
+                <div class="content-card">
+                  <div class="card-title">MacBook Pro 14インチ</div>
+                  <div class="card-description">M3 Pro チップ搭載モデル</div>
+                  <div class="card-meta">
+                    <span>¥198,000</span>
+                    <span>4時間前</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h3 class="section-title">人気の商品</h3>
+              <div class="content-cards">
+                <div class="content-card">
+                  <div class="card-title">AirPods Pro</div>
+                  <div class="card-description">ノイズキャンセリング機能</div>
+                  <div class="card-meta">
+                    <span>¥28,000</span>
+                    <span>6時間前</span>
+                  </div>
+                </div>
+                <div class="content-card">
+                  <div class="card-title">iPhone 15 Pro</div>
+                  <div class="card-description">チタニウム素材使用</div>
+                  <div class="card-meta">
+                    <span>¥159,800</span>
+                    <span>8時間前</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- いいね！ Content -->
+        <div class="subtab-content" id="likes">
+          <div class="content-sections">
+            <div class="content-section">
+              <h3 class="section-title">お気に入りの商品</h3>
+              <div class="content-cards">
+                <div class="content-card">
+                  <div class="card-title">Nintendo Switch</div>
+                  <div class="card-description">人気ゲーム機本体</div>
+                  <div class="card-meta">
+                    <span>¥25,000</span>
+                    <span>💖 3日前</span>
+                  </div>
+                </div>
+                <div class="content-card">
+                  <div class="card-title">PlayStation 5</div>
+                  <div class="card-description">次世代ゲーム機</div>
+                  <div class="card-meta">
+                    <span>¥59,800</span>
+                    <span>💖 1週間前</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- フォロー中 Content -->
+        <div class="subtab-content" id="following">
+          <div class="content-sections">
+            <div class="content-section">
+              <h3 class="section-title">フォロー中のユーザー</h3>
+              <div class="content-cards">
+                <div class="content-card">
+                  <div class="card-title">@tech_seller</div>
+                  <div class="card-description">最新ガジェットを出品中</div>
+                  <div class="card-meta">
+                    <span>新商品 3点</span>
+                    <span>👤 12時間前</span>
+                  </div>
+                </div>
+                <div class="content-card">
+                  <div class="card-title">@fashion_store</div>
+                  <div class="card-description">トレンドファッション専門</div>
+                  <div class="card-meta">
+                    <span>新商品 5点</span>
+                    <span>👤 1日前</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         OTHER SCREENS (unchanged)
+    ══════════════════════════════════════ -->
+    <div class="screen auction">オークション画面</div>
+    <div class="screen sell">出品画面</div>
+    <div class="screen wallet">おサイフ画面</div>
+    <div class="screen search">検索画面</div>
+
+    <!-- ══════════════════════════════════════
+         FIGMA NAVIGATION BAR
+    ══════════════════════════════════════ -->
+    <div class="tab-bar-wrapper">
+      <div class="tab-group-pill">
+        <ul class="tab-nav">
+          <li>
+            <button class="tab-btn active" data-tab="home">
+              <svg viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              </svg>
+              <span>ホーム</span>
+            </button>
+          </li>
+          <li>
+            <button class="tab-btn" data-tab="auction">
+              <svg viewBox="0 0 24 24">
+                <path d="M11.15,3.4L9.83,4.72L15.11,10L9.83,15.28L11.15,16.6L17.75,10L11.15,3.4Z"/>
+              </svg>
+              <span>オークション</span>
+            </button>
+          </li>
+          <li>
+            <button class="tab-btn" data-tab="sell">
+              <svg viewBox="0 0 24 24">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+              </svg>
+              <span>出品</span>
+            </button>
+          </li>
+          <li>
+            <button class="tab-btn" data-tab="wallet">
+              <svg viewBox="0 0 24 24">
+                <path d="M21,18V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H20A2,2 0 0,0 18,8V16A2,2 0 0,0 20,18M20,8V16H18V8H20Z"/>
+              </svg>
+              <span>おさいふ</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="search-pill">
+        <button class="search-btn" data-tab="search">
+          <svg viewBox="0 0 24 24">
+            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Tab switching
+    const tabButtons = document.querySelectorAll('.tab-btn, .search-btn');
+    const screens = document.querySelectorAll('.screen');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetTab = button.getAttribute('data-tab');
+
+        // Remove active from all
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        screens.forEach(screen => screen.classList.remove('active'));
+
+        // Add active to current
+        button.classList.add('active');
+        document.querySelector(`.screen.${targetTab}`).classList.add('active');
+
+        // Haptic feedback
+        if (navigator.vibrate) {
+          navigator.vibrate(10);
+        }
+      });
+    });
+
+    // Subtab switching
+    const subtabButtons = document.querySelectorAll('.subtab-btn');
+    const subtabContents = document.querySelectorAll('.subtab-content');
+
+    subtabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetSubtab = button.getAttribute('data-subtab');
+
+        // Remove active from all subtabs
+        subtabButtons.forEach(btn => btn.classList.remove('active'));
+        subtabContents.forEach(content => content.classList.remove('active'));
+
+        // Add active to current
+        button.classList.add('active');
+        document.getElementById(targetSubtab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
