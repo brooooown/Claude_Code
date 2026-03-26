@@ -5013,6 +5013,15 @@
       var el = document.getElementById('proto-version');
       if (el) el.textContent = 'prototype（' + VERSION + '）';
 
+      // 画像エラーハンドリング - Image error handling for robustness
+      document.querySelectorAll('img').forEach(function(img) {
+        img.addEventListener('error', function() {
+          console.warn('画像読み込み失敗:', this.src);
+          // フォールバック実装（必要に応じて）
+          // this.src = 'assets/images/placeholder.png';
+        });
+      });
+
       // home-tile and auc-item-thumb share the same sticker logic
       var tiles = document.querySelectorAll('.home-tile, .auc-item-thumb, .auc-mini-thumb');
       tiles.forEach(function (tile, i) {
