@@ -675,7 +675,7 @@
     /* スクロール可能なコンテンツエリア */
     .search-content-scroll {
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 60px; left: 0; right: 0; /* top-navの高さ分を確保 */
       bottom: 70px; /* フロートバーの高さ分のマージンを確保 */
       overflow-y: auto;
       overflow-x: hidden;
@@ -1357,8 +1357,9 @@
     }
 
     .search-home-section:first-child {
-      padding-top: 24px;
+      padding-top: 16px;
     }
+
 
     .search-section-title {
       font-size: 18px;
