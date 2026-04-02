@@ -6079,12 +6079,10 @@
     if (!_cachedIndicator) {
       _cachedIndicator = document.getElementById('tab-indicator');
     }
-    if (!_cachedTabBar) {
-      _cachedTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
-    }
+    // Always get fresh tab bar reference to avoid search mode conflicts
+    const mainTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
 
     const indicator = _cachedIndicator;
-    const mainTabBar = _cachedTabBar;
 
     if (!indicator || !el) return;
 
@@ -6177,10 +6175,11 @@
 
     if (!_searchModeActive) {
       // Save current active tab before entering search mode
-      const active = document.querySelector('.tab-item.active');
+      const mainTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
+      const active = mainTabBar ? mainTabBar.querySelector('.tab-item.active') : null;
       if (active) {
-        prevTab = active.getAttribute('onclick').match(/'(\w+)'/)[1];
-        console.log('Saved prevTab:', prevTab); // Debug
+        const match = active.getAttribute('onclick')?.match(/'(\w+)'/);
+        if (match) prevTab = match[1];
       }
 
       // Enter search mode with animation
@@ -6565,8 +6564,13 @@
 
   // 検索アイコンタップ → 検索画面に遷移 + キーボード即時起動
   function goToSearch(btn) {
-    const active = document.querySelector('.tab-item.active');
-    if (active) prevTab = active.getAttribute('onclick').match(/'(\w+)'/)[1];
+    // 確実にメインタブバーから現在のアクティブタブを取得
+    const mainTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
+    const active = mainTabBar ? mainTabBar.querySelector('.tab-item.active') : null;
+    if (active) {
+      const match = active.getAttribute('onclick')?.match(/'(\w+)'/);
+      if (match) prevTab = match[1];
+    }
 
     // Cache DOM elements
     const idp = document.getElementById('screen-idp');
@@ -6673,8 +6677,9 @@
       } else if (baseEntry && baseEntry.element) {
         baseEntry.element.classList.add('active');
       }
-      // タブインジケーターを元のタブに戻す
-      const prevItem = document.querySelector(`.tab-item[onclick*="'${prevTab}'"]`);
+      // タブインジケーターを元のタブに戻す - メインタブバーから正確に取得
+      const mainTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
+      const prevItem = mainTabBar ? mainTabBar.querySelector(`.tab-item[onclick*="'${prevTab}'"]`) : null;
       if (prevItem) {
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.search-btn').forEach(t => t.classList.remove('active'));
@@ -6691,29 +6696,31 @@
       history.replaceState(null, '', '#item/' + _currentItemId);
     } else {
       // Regular search exit - go back to previous tab
-      console.log('Returning to prevTab:', prevTab); // Debug
-      const prevItem = document.querySelector(`.tab-item[onclick*="'${prevTab}'"]`);
+      // Find correct tab element from main tab bar
+      const mainTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
+      let prevItem = null;
+
+      if (mainTabBar) {
+        prevItem = mainTabBar.querySelector(`.tab-item[onclick*="'${prevTab}'"]`);
+      }
+
       if (prevItem) {
-        console.log('Found prevItem, switching tab'); // Debug
-        // First ensure all tabs are properly reset
+        // Clear all active states first
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.search-btn').forEach(t => t.classList.remove('active'));
 
-        // Set the previous tab as active
+        // Activate the correct tab without double-updating indicator
         prevItem.classList.add('active');
-        updateTabIndicator(prevItem, true);
 
-        // Switch to the screen
+        // Switch to the screen (this will handle the indicator update)
         switchTab(prevTab, prevItem);
       } else {
-        console.log('PrevItem not found, defaulting to home'); // Debug
         // Fallback to home if prevTab not found
-        const homeItem = document.querySelector(`.tab-item[onclick*="'home'"]`);
+        const homeItem = mainTabBar ? mainTabBar.querySelector(`.tab-item[onclick*="'home'"]`) : null;
         if (homeItem) {
           document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
           document.querySelectorAll('.search-btn').forEach(t => t.classList.remove('active'));
           homeItem.classList.add('active');
-          updateTabIndicator(homeItem, true);
           switchTab('home', homeItem);
         }
       }
