@@ -328,10 +328,17 @@
       background: #ededed;
       border-radius: 100px;
       transition:
-        left 0.3s cubic-bezier(0.33, 1, 0.68, 1),
-        width 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+        left 0.6s cubic-bezier(0.33, 1, 0.68, 1),
+        width 0.6s cubic-bezier(0.33, 1, 0.68, 1),
+        opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1);
       pointer-events: none;
       z-index: 0;
+    }
+
+    /* Hide tab indicator in search mode since only one tab is visible */
+    .tab-bar-wrapper.search-mode .tab-indicator {
+      opacity: 0;
+      pointer-events: none;
     }
 
     /* Tab item */
@@ -534,6 +541,270 @@
     }
 
     /* ════════════════════════════════════════
+       LIQUID GLASS NAVIGATION TRANSFORMATION
+    ════════════════════════════════════════ */
+
+    /* Search mode state - Apple Liquid Glass Design transformation */
+    .tab-bar-wrapper.search-mode {
+      gap: 8px;
+    }
+
+    /* Search pill transformation: circle → search bar */
+    .tab-bar-wrapper.search-mode .search-pill {
+      width: calc(100% - 80px);
+      border-radius: 30px;
+      transition:
+        width 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+        border-radius 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Default search pill keeps circular */
+    .search-pill {
+      transition:
+        width 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+        border-radius 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Tab group transformation: collapse to single active tab */
+    .tab-bar-wrapper.search-mode .tab-group-pill {
+      width: 64px;
+      height: 64px;
+      min-width: 64px;
+      min-height: 64px;
+      flex: 0 0 auto;
+      /* Keep the glass effect but make it more subtle */
+      background: rgba(247, 247, 247, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      /* Center single active tab */
+      overflow: visible;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      transition:
+        width 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+        height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Hide glass pill pseudo-elements in search mode that interfere with tab content */
+    .tab-bar-wrapper.search-mode .tab-group-pill::before,
+    .tab-bar-wrapper.search-mode .tab-group-pill::after {
+      display: none;
+    }
+
+    /* Default tab group keeps flexible */
+    .tab-group-pill {
+      transition:
+        width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Hide non-active tabs completely in search mode - show only selected tab */
+    .tab-bar-wrapper.search-mode .tab-item:not(.active) {
+      display: none !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Active tab remains prominent and centered - clickable to exit search mode */
+    .tab-bar-wrapper.search-mode .tab-item.active {
+      display: flex !important;
+      opacity: 1 !important;
+      transform: scale(1) !important;
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      position: relative;
+      z-index: 3;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 2px;
+      pointer-events: auto;
+      /* DEBUG: Add visible background to see if tab area exists */
+      background: rgba(255, 0, 0, 0.3) !important;
+      border: 2px solid red !important;
+      transition:
+        opacity 0.6s cubic-bezier(0.33, 1, 0.68, 1),
+        transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    /* Ensure tab icon is visible in search mode */
+    .tab-bar-wrapper.search-mode .tab-item.active .tab-icon {
+      display: grid !important;
+      width: 26px;
+      height: 26px;
+      position: relative;
+      z-index: 4;
+      /* DEBUG: Add visible background to see if icon area exists */
+      background: rgba(0, 255, 0, 0.5) !important;
+      border: 1px solid green !important;
+    }
+
+    /* Ensure tab icon SVGs are visible */
+    .tab-bar-wrapper.search-mode .tab-item.active .tab-icon svg {
+      display: block !important;
+      width: 24px !important;
+      height: 24px !important;
+      fill: var(--color-fg-primary) !important;
+      color: var(--color-fg-primary) !important;
+    }
+
+    /* Ensure tab label is visible in search mode */
+    .tab-bar-wrapper.search-mode .tab-item.active .tab-label {
+      display: block !important;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-fg-primary);
+      text-align: center;
+      position: relative;
+      z-index: 4;
+      /* DEBUG: Add visible background to see if label area exists */
+      background: rgba(0, 0, 255, 0.3) !important;
+    }
+
+    /* Ensure smooth transitions for all tab items */
+    .tab-item {
+      transition:
+        opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Search bar content inside transformed search pill */
+    .search-pill-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    /* Search button (default state) */
+    .search-pill-content .search-btn {
+      opacity: 1;
+      transform: scale(1);
+      transition:
+        opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Hide search button in search mode */
+    .tab-bar-wrapper.search-mode .search-pill-content .search-btn {
+      opacity: 0;
+      transform: scale(0.8);
+      pointer-events: none;
+    }
+
+    /* Search input wrap (hidden by default) */
+    .search-pill-content .search-input-wrap {
+      opacity: 0;
+      transform: translateX(20px);
+      pointer-events: none;
+      transition:
+        opacity 0.35s cubic-bezier(0.33, 1, 0.68, 1),
+        transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-radius: inherit;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Show search input wrap in search mode */
+    .tab-bar-wrapper.search-mode .search-pill-content .search-input-wrap {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      transition-delay: 0.2s; /* Appear after search button disappears */
+    }
+
+    /* Search input field (exactly like reference URL) */
+    .search-input-field {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+      color: var(--color-fg-primary);
+      caret-color: #007aff;
+    }
+
+    .search-input-field::placeholder {
+      color: rgba(0,0,0,0.30);
+    }
+
+    /* WebKit のデフォルトクリアボタンを非表示 (exactly like reference) */
+    .search-input-field::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+    }
+
+    /* Search input icon */
+    .search-input-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      fill: var(--color-fg-primary);
+    }
+
+    /* Search input clear button (exactly like reference URL) */
+    .search-input-wrap .search-input-clear {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--color-fg-tertiary);
+      -webkit-tap-highlight-color: transparent;
+      display: none; /* Hidden by default */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-input-wrap .search-input-clear.visible {
+      display: flex !important; /* Show when visible class is added */
+    }
+
+    .search-input-clear:active {
+      opacity: 0.5;
+    }
+
+    /* Hide mic icon when clear button is visible (exactly like reference) */
+    .search-input-wrap .search-input-clear.visible ~ .search-input-mic {
+      display: none !important; /* Complete hide, no transition */
+    }
+
+    /* Search input mic button */
+    .search-input-mic {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--color-fg-primary);
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-input-mic:active {
+      opacity: 0.5;
+    }
+
+    /* ════════════════════════════════════════
        SEARCH HOME SCREEN
     ════════════════════════════════════════ */
     #screen-search {
@@ -665,8 +936,8 @@
       color: #fff; line-height: 1.3;
     }
 
-    /* 検索画面ではタブバーを非表示 */
-    #screen-search.active ~ .tab-bar-wrapper {
+    /* 検索画面ではタブバーを非表示（ただし検索モード時は表示維持） */
+    #screen-search.active ~ .tab-bar-wrapper:not(.search-mode) {
       display: none;
     }
     /* 検索結果からIDP（商品詳細）を開いた時はタブバーを再表示 */
@@ -1052,6 +1323,123 @@
       display: block;
       position: relative;
       z-index: 3;
+    }
+
+    /* ════════════════════════════════════════
+       RECENT SEARCH HISTORY SCREEN
+    ════════════════════════════════════════ */
+    #recent-search-screen {
+      position: absolute;
+      inset: 0;
+      background: var(--color-bg-primary);
+      overflow: hidden;
+      padding-top: calc(env(safe-area-inset-top) + 16px);
+      z-index: 10;
+      display: none;
+    }
+
+    #recent-search-screen.active {
+      display: block;
+    }
+
+    .recent-search-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 16px 16px;
+    }
+
+    .recent-search-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-fg-primary);
+      line-height: 1.2;
+    }
+
+    .recent-search-edit {
+      background: none;
+      border: none;
+      color: var(--color-fg-accent);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+
+    .recent-search-edit:hover {
+      background-color: var(--color-bg-secondary);
+    }
+
+    .recent-search-content {
+      padding: 0 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .recent-search-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+      min-height: 60px;
+    }
+
+    .recent-search-item:hover {
+      background-color: var(--color-bg-secondary);
+    }
+
+    /* Image search items */
+    .recent-search-item.image-search .search-item-thumbnail {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: var(--color-bg-secondary);
+    }
+
+    .recent-search-item.image-search .search-item-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .recent-search-item.image-search .search-item-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-fg-primary);
+      line-height: 1.3;
+    }
+
+    /* Text search items */
+    .recent-search-item.text-search .search-item-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-bg-secondary);
+      border-radius: 22px;
+      flex-shrink: 0;
+    }
+
+    .recent-search-item.text-search .search-item-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--color-fg-secondary);
+    }
+
+    .recent-search-item.text-search .search-item-text {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--color-fg-primary);
+      line-height: 1.3;
     }
 
     /* ════════════════════════════════════════
@@ -4385,6 +4773,85 @@
       </div>
     </div>
 
+    <!-- Recent Search History Screen -->
+    <div id="recent-search-screen">
+      <div class="recent-search-header">
+        <h3 class="recent-search-title">最近の検索</h3>
+        <button class="recent-search-edit">編集</button>
+      </div>
+      <div class="recent-search-content">
+        <!-- Image search items -->
+        <div class="recent-search-item image-search" onclick="selectSearchItem(this, '画像検索')">
+          <div class="search-item-thumbnail">
+            <img src="assets/items/m22996847422_1.jpg" alt="画像から検索">
+          </div>
+          <span class="search-item-text">画像から検索</span>
+        </div>
+        <div class="recent-search-item image-search" onclick="selectSearchItem(this, '画像検索')">
+          <div class="search-item-thumbnail">
+            <img src="assets/items/m10177377087_1.jpg" alt="画像から検索">
+          </div>
+          <span class="search-item-text">画像から検索</span>
+        </div>
+        <div class="recent-search-item image-search" onclick="selectSearchItem(this, '画像検索')">
+          <div class="search-item-thumbnail">
+            <img src="assets/items/m64124079245_1.jpg" alt="画像から検索">
+          </div>
+          <span class="search-item-text">画像から検索</span>
+        </div>
+
+        <!-- Text search items -->
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, 'ジルサンダー Tシャツ')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">ジルサンダー Tシャツ</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, 'PS5 コントローラー')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">PS5 コントローラー</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, '冬用ワンピース')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">冬用ワンピース</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, 'アウトドア用品 コンパクト')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">アウトドア用品 コンパクト</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, 'ワンピース 冬')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">ワンピース 冬</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, 'コート 暖かい')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">コート 暖かい</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, '通勤リュック')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">通勤リュック</span>
+        </div>
+        <div class="recent-search-item text-search" onclick="selectSearchItem(this, '軽いリュック')">
+          <div class="search-item-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a .7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          </div>
+          <span class="search-item-text">軽いリュック</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ══ お知らせ画面 ══ -->
@@ -5266,8 +5733,20 @@
 
     <!-- Search pill (circle, icon only) -->
     <div class="glass-pill search-pill">
-      <div class="search-btn" onclick="goToSearch(this)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+      <div class="search-pill-content">
+        <div class="search-btn" onclick="toggleSearchMode(this)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+        </div>
+        <div class="search-input-wrap">
+          <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
+          <input class="search-input-field" placeholder="商品を検索" type="search" />
+          <button class="search-input-clear" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.22 6.22a.75.75 0 0 1 1.06 0L12 10.94l4.72-4.72a.75.75 0 1 1 1.06 1.06L13.06 12l4.72 4.72a.75.75 0 1 1-1.06 1.06L12 13.06l-4.72 4.72a.75.75 0 0 1-1.06-1.06L10.94 12 6.22 7.28a.75.75 0 0 1 0-1.06"/></svg>
+          </button>
+          <button class="search-input-mic" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M16.7 12c0 2.59-2.11 4.7-4.7 4.7S7.3 14.59 7.3 12V6.7C7.3 4.11 9.41 2 12 2s4.7 2.11 4.7 4.7zM12 3.4c-1.82 0-3.3 1.48-3.3 3.3V12c0 1.82 1.48 3.3 3.3 3.3s3.3-1.48 3.3-3.3V6.7c0-1.82-1.48-3.3-3.3-3.3m6.8 7.9c.39 0 .7.31.7.7 0 3.89-2.99 7.11-6.8 7.46v1.14h3.6c.39 0 .7.31.7.7s-.31.7-.7.7H7.7c-.39 0-.7-.31-.7-.7s.31-.7.7-.7h3.6v-1.14C7.49 19.11 4.5 15.9 4.5 12c0-.39.31-.7.7-.7s.7.31.7.7c0 3.36 2.74 6.1 6.1 6.1s6.1-2.74 6.1-6.1c0-.39.31-.7.7-.7" clip-rule="evenodd"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -5469,7 +5948,208 @@
     history.replaceState(null, '', '#item/' + _currentItemId);
   }
 
+  // ════════════════════════════════════════
+  // LIQUID GLASS NAVIGATION TRANSFORMATION
+  // ════════════════════════════════════════
+
+  var _searchModeActive = false;
+
+  function toggleSearchMode(el) {
+    console.log('toggleSearchMode called, current state:', _searchModeActive); // Debug
+
+    const tabBarWrapper = document.querySelector('.tab-bar-wrapper');
+    console.log('tabBarWrapper found:', tabBarWrapper); // Debug
+
+    if (!_searchModeActive) {
+      // Save current active tab before entering search mode
+      const active = document.querySelector('.tab-item.active');
+      if (active) {
+        prevTab = active.getAttribute('onclick').match(/'(\w+)'/)[1];
+        console.log('Saved prevTab:', prevTab); // Debug
+      }
+
+      // Enter search mode with animation
+      _searchModeActive = true;
+      tabBarWrapper.classList.add('search-mode');
+      console.log('Entering search mode, classes:', tabBarWrapper.className); // Debug
+
+      // Also transition to search screen after a brief animation delay
+      setTimeout(() => {
+        goToSearch(el);
+      }, 300); // Start screen transition during animation
+
+    } else {
+      // Exit search mode
+      console.log('Exiting search mode'); // Debug
+      exitSearchMode();
+    }
+  }
+
+  function exitSearchMode() {
+    console.log('exitSearchMode called, current state:', _searchModeActive); // Debug
+
+    if (!_searchModeActive) return;
+
+    _searchModeActive = false;
+    const tabBarWrapper = document.querySelector('.tab-bar-wrapper');
+    const searchInput = document.querySelector('#screen-search .search-input-field');
+
+    // Clear search input
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.blur();
+    }
+
+    // Remove search mode class
+    tabBarWrapper.classList.remove('search-mode');
+    console.log('Exited search mode, classes:', tabBarWrapper.className); // Debug
+  }
+
+  // Handle search input events (exactly like reference URL)
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input-field');
+    const searchIcon = document.querySelector('.search-input-icon');
+
+    if (searchInput) {
+      // Handle search input tap to focus (show keyboard)
+      searchInput.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent triggering outside click handler
+        this.focus({ preventScroll: true });
+      });
+
+      // Handle search input (exactly like reference URL)
+      searchInput.addEventListener('input', function(e) {
+        const clearBtn = document.querySelector('.search-input-clear');
+        console.log('Input event:', e.target.value.length, clearBtn); // Debug
+
+        // Show/hide clear button based on input content (exactly like reference)
+        if (e.target.value.length > 0) {
+          if (clearBtn) {
+            clearBtn.classList.add('visible');
+            console.log('Added visible class to clear button'); // Debug
+          }
+        } else {
+          if (clearBtn) {
+            clearBtn.classList.remove('visible');
+            console.log('Removed visible class from clear button'); // Debug
+          }
+        }
+      });
+
+      // Handle Enter key
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          const value = e.target.value.trim();
+          if (value.length > 0) {
+            // Execute search
+            performSearch(value);
+          }
+        }
+      });
+
+      // Handle focus loss - but don't exit search mode immediately
+      searchInput.addEventListener('blur', function(e) {
+        // Keep search mode active even when input loses focus
+        // User can tap elsewhere to exit or use a specific exit action
+      });
+    }
+
+    // Handle search icon tap to go to search screen
+    if (searchIcon) {
+      searchIcon.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log('Search icon clicked'); // Debug
+
+        // Get current search value
+        const searchValue = searchInput ? searchInput.value.trim() : '';
+
+        // Exit liquid glass search mode
+        exitSearchMode();
+
+        // Small delay to ensure search mode is exited before transition
+        setTimeout(() => {
+          if (searchValue) {
+            // If there's a search term, go to search screen with that term
+            goToSearchWithQuery(searchValue);
+          } else {
+            // Just go to regular search screen
+            goToSearch();
+          }
+        }, 100);
+      });
+    }
+
+    // Handle search input clear button (exactly like reference URL)
+    const searchClearBtn = document.querySelector('.search-input-clear');
+    if (searchClearBtn) {
+      searchClearBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+
+        if (searchInput) {
+          searchInput.value = '';
+          searchInput.focus({ preventScroll: true });
+          // Trigger input event to update UI (exactly like reference)
+          searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      });
+    }
+
+    // Handle search input mic button
+    const searchMicBtn = document.querySelector('.search-input-mic');
+    if (searchMicBtn) {
+      searchMicBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Voice input functionality could be added here
+        console.log('Mic button clicked');
+      });
+    }
+
+    // Handle clicks outside search area to exit search mode
+    // Note: Removed auto-exit on outside click to keep search mode persistent
+    // document.addEventListener('click', function(e) {
+    //   if (_searchModeActive && !e.target.closest('.search-pill')) {
+    //     exitSearchMode();
+    //   }
+    // });
+
+    // Handle escape key to exit search mode
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && _searchModeActive) {
+        exitSearchMode();
+      }
+    });
+  });
+
+  function performSearch(query) {
+    // For now, just transition to the existing search screen
+    exitSearchMode();
+    goToSearchWithQuery(query);
+  }
+
+  function goToSearchWithQuery(query) {
+    // Go to search screen first
+    goToSearch();
+
+    // Set search query in the search input field after screen transition
+    setTimeout(() => {
+      const searchScreenInput = document.querySelector('#screen-search .search-input-field');
+      if (searchScreenInput && query) {
+        searchScreenInput.value = query;
+        // Trigger input event to update UI (like clear button visibility)
+        searchScreenInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    }, 100);
+  }
+
   function switchTab(tabName, el) {
+    // 検索モードでアクティブなタブをタップ → 検索モードを終了
+    if (el.classList.contains('active') && _searchModeActive) {
+      exitSearchMode();
+      return;
+    }
+
     // 既にアクティブなタブをタップ
     if (el.classList.contains('active')) {
       const idp = document.getElementById('screen-idp');
@@ -5607,7 +6287,15 @@
       _searchFromIdp = false;
       _idpStackBeforeSearch = null;
     }
-    switchTab('search', btn);
+
+    // 検索モードの場合はタブ状態をリセットしない（switchTabを呼ばない）
+    if (_searchModeActive) {
+      console.log('Search mode active - activating search screen without resetting tabs');
+      // 検索画面だけをアクティブにしてタブ状態は保持
+      document.getElementById('screen-search').classList.add('active');
+    } else {
+      switchTab('search', btn);
+    }
     fixSearchContentHeight();
     document.querySelector('.search-content-scroll').scrollTop = 0;
     window.scrollTo(0, 0);
@@ -5626,6 +6314,16 @@
 
   // × ボタン → キーボードを閉じて前の画面に戻る
   function exitSearch() {
+    console.log('exitSearch called'); // Debug
+
+    // Force exit liquid glass search mode
+    _searchModeActive = false;
+    const tabBarWrapper = document.querySelector('.tab-bar-wrapper');
+    if (tabBarWrapper) {
+      tabBarWrapper.classList.remove('search-mode');
+      console.log('Removed search-mode from tab bar'); // Debug
+    }
+
     const input = document.getElementById('search-input');
     input.blur();
     input.value = '';
@@ -5665,10 +6363,32 @@
       document.body.classList.add('idp-open');
       history.replaceState(null, '', '#item/' + _currentItemId);
     } else {
+      // Regular search exit - go back to previous tab
+      console.log('Returning to prevTab:', prevTab); // Debug
       const prevItem = document.querySelector(`.tab-item[onclick*="'${prevTab}'"]`);
       if (prevItem) {
+        console.log('Found prevItem, switching tab'); // Debug
+        // First ensure all tabs are properly reset
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.search-btn').forEach(t => t.classList.remove('active'));
+
+        // Set the previous tab as active
+        prevItem.classList.add('active');
         updateTabIndicator(prevItem, true);
+
+        // Switch to the screen
         switchTab(prevTab, prevItem);
+      } else {
+        console.log('PrevItem not found, defaulting to home'); // Debug
+        // Fallback to home if prevTab not found
+        const homeItem = document.querySelector(`.tab-item[onclick*="'home'"]`);
+        if (homeItem) {
+          document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.search-btn').forEach(t => t.classList.remove('active'));
+          homeItem.classList.add('active');
+          updateTabIndicator(homeItem, true);
+          switchTab('home', homeItem);
+        }
       }
     }
   }
@@ -6393,6 +7113,144 @@
     if (m) openItemDetail(m[1], true);
   })();
 
+  // ════════════════════════════════════════
+  // RECENT SEARCH HISTORY FUNCTIONALITY
+  // ════════════════════════════════════════
+
+  function showRecentSearchScreen() {
+    console.log('showRecentSearchScreen called');
+
+    // Check if elements exist
+    const searchContent = document.querySelector('.search-content-scroll');
+    const searchFloatBar = document.querySelector('.search-float-bar');
+    const recentSearchScreen = document.getElementById('recent-search-screen');
+
+    console.log('search-content-scroll found:', searchContent);
+    console.log('search-float-bar found:', searchFloatBar);
+    console.log('recent-search-screen found:', recentSearchScreen);
+
+    if (!recentSearchScreen) {
+      console.error('recent-search-screen element not found!');
+      return;
+    }
+
+    // Hide main search screen content and show recent search
+    if (searchContent) {
+      searchContent.style.display = 'none';
+      console.log('Hidden search-content-scroll');
+    }
+
+    if (searchFloatBar) {
+      searchFloatBar.style.display = 'none';
+      console.log('Hidden search-float-bar');
+    }
+
+    recentSearchScreen.classList.add('active');
+    console.log('Added active class to recent-search-screen');
+    console.log('Recent search screen classes:', recentSearchScreen.className);
+    console.log('Recent search screen style display:', window.getComputedStyle(recentSearchScreen).display);
+  }
+
+  function hideRecentSearchScreen() {
+    console.log('Hiding recent search screen');
+    // Show main search screen content and hide recent search
+    document.querySelector('.search-content-scroll').style.display = 'block';
+    document.querySelector('.search-float-bar').style.display = 'block';
+    document.getElementById('recent-search-screen').classList.remove('active');
+  }
+
+  function selectSearchItem(element, searchQuery) {
+    console.log('Selected search item:', searchQuery);
+    // Hide recent search screen
+    hideRecentSearchScreen();
+    // Show search results for the selected query
+    showSearchResults(searchQuery);
+  }
+
+  // Add event listener to search input fields to show recent search screen
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Setting up search input listeners');
+
+    // Target both search input fields
+    const searchScreenInput = document.querySelector('#screen-search .search-input-field');
+    const tabBarInput = document.querySelector('.search-pill .search-input-field');
+
+    console.log('Search screen input found:', searchScreenInput);
+    console.log('Tab bar input found:', tabBarInput);
+
+    function setupInputListener(input, inputName) {
+      if (!input) return;
+
+      console.log(`Setting up listeners for ${inputName}`);
+
+      input.addEventListener('focus', function() {
+        console.log(`${inputName} focused`);
+        console.log('Input value:', this.value);
+
+        // Only show recent search if input is empty and we're in search screen
+        const searchScreen = document.getElementById('screen-search');
+        console.log('Search screen found:', searchScreen);
+        console.log('Search screen is active:', searchScreen && searchScreen.classList.contains('active'));
+        console.log('Input is empty:', !this.value.trim());
+
+        if (searchScreen && searchScreen.classList.contains('active') && !this.value.trim()) {
+          console.log('Conditions met - calling showRecentSearchScreen');
+          showRecentSearchScreen();
+        } else {
+          console.log('Conditions not met for showing recent search');
+        }
+      });
+
+      // Hide recent search when user starts typing
+      input.addEventListener('input', function() {
+        console.log(`${inputName} changed, value:`, this.value);
+        if (this.value.trim()) {
+          console.log('Input has value - hiding recent search');
+          hideRecentSearchScreen();
+        } else if (document.getElementById('screen-search').classList.contains('active')) {
+          console.log('Input is empty and search screen is active - showing recent search');
+          showRecentSearchScreen();
+        }
+      });
+    }
+
+    // Setup listeners for both inputs
+    setupInputListener(searchScreenInput, 'Search Screen Input');
+    setupInputListener(tabBarInput, 'Tab Bar Input');
+
+    // Also add a click listener to the search input wrap for more reliable triggering
+    const searchInputWrap = document.querySelector('#screen-search .search-input-wrap');
+    if (searchInputWrap) {
+      console.log('Adding click listener to search input wrap');
+      searchInputWrap.addEventListener('click', function() {
+        console.log('Search input wrap clicked');
+        const searchScreen = document.getElementById('screen-search');
+        const input = searchInputWrap.querySelector('.search-input-field');
+        if (searchScreen && searchScreen.classList.contains('active') && (!input || !input.value.trim())) {
+          console.log('Showing recent search on input wrap click');
+          showRecentSearchScreen();
+        }
+      });
+    }
+
+    // Add click listener to the search pill input field (in search mode)
+    const searchPillInputWrap = document.querySelector('.search-pill .search-input-wrap');
+    if (searchPillInputWrap) {
+      console.log('Adding click listener to search pill input wrap');
+      searchPillInputWrap.addEventListener('click', function() {
+        console.log('Search pill input wrap clicked');
+        const searchScreen = document.getElementById('screen-search');
+        const input = searchPillInputWrap.querySelector('.search-input-field');
+        if (searchScreen && searchScreen.classList.contains('active') && (!input || !input.value.trim())) {
+          console.log('Showing recent search from search pill click');
+          showRecentSearchScreen();
+        }
+      });
+    }
+
+    console.log('All event listeners setup completed');
+  });
+
   </script>
 
   <!-- ════ ITEM DETAIL PAGE ════ -->
@@ -6937,5 +7795,7 @@
       </div>
     </div>
   </div>
+
+
 </body>
 </html>
