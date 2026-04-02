@@ -563,6 +563,7 @@
       padding: 12px 16px;
       z-index: 2;
       pointer-events: none;
+      background: transparent;
     }
     .search-results-header > * { pointer-events: auto; }
     .search-results-header .spacer { flex: 1; }
@@ -676,7 +677,7 @@
     /* スクロール可能なコンテンツエリア */
     .search-content-scroll {
       position: absolute;
-      top: 60px; left: 0; right: 0; /* top-navの高さ分を確保 */
+      top: 0; left: 0; right: 0;
       bottom: 70px; /* フロートバーの高さ分のマージンを確保 */
       overflow-y: auto;
       overflow-x: hidden;
@@ -684,6 +685,7 @@
       overscroll-behavior-x: none;
       -webkit-overflow-scrolling: touch;
       padding-bottom: 20px;
+      padding-top: calc(env(safe-area-inset-top) + 64px);
     }
 
     /* 浮いている検索フォーム（スクロールされない） */
@@ -1156,8 +1158,11 @@
     .auc-section { background: var(--color-bg-primary); }
     .auc-sep { height: 8px; background: var(--color-bg-primary); }
 
-    .auc-sec-hd { display: flex; align-items: center; gap: 8px; padding: 8px 16px 10px; }
+    .auc-sec-hd { display: flex; align-items: center; gap: 8px; padding: 8px 0 10px; }
+    /* Auction screen sections keep left/right padding */
+    #screen-auction .auc-sec-hd { padding: 8px 16px 10px; }
     .auc-sec-title { flex: 1; font-size: 16px; font-weight: 600; color: var(--color-fg-primary); }
+    .search-sec-title { flex: 1; font-size: 16px; font-weight: 600; color: var(--color-fg-primary); }
     .auc-sec-btn {
       width: 36px; height: 36px; border-radius: 50%;
       background: var(--color-bg-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -1354,11 +1359,11 @@
     .search-home-section {
       background: var(--color-bg-primary);
       padding: 0 16px;
-      margin-bottom: 8px;
+      margin-bottom: 24px;
     }
 
     .search-home-section:first-child {
-      padding-top: 16px;
+      padding-top: 0;
     }
 
 
@@ -1436,47 +1441,120 @@
       font-weight: 600;
       color: var(--color-fg-primary);
       text-align: center;
+      margin-bottom: 8px;
     }
 
-    /* サービスセクション */
-    .search-service-item {
-      background: var(--color-bg-secondary);
+    /* サービスカルーセル */
+    .service-carousel-container {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .service-carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .service-carousel-card {
+      background: #f0f0f0;
       border-radius: 16px;
       padding: 16px;
-      margin-bottom: 12px;
-      overflow: hidden;
+      min-width: 180px;
+      flex-shrink: 0;
     }
 
-    .search-service-header {
+    .service-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 6px;
+      margin-bottom: 16px;
     }
 
-    .search-service-title {
-      font-size: 16px;
+    .service-card-title {
+      font-size: 14px;
       font-weight: 600;
       color: var(--color-fg-primary);
-      flex: 1;
     }
 
-    .search-service-arrow {
-      width: 16px;
-      height: 16px;
-    }
-
-    .search-service-cards {
+    .service-card-items {
       display: flex;
       gap: 4px;
     }
 
-    .search-service-card {
+    .service-item-tile {
       flex: 1;
-      aspect-ratio: 1;
-      background: var(--color-bg-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .service-item-image {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--color-bg-tertiary);
+    }
+
+    .service-item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .service-item-image.gacha-red {
+      background: linear-gradient(135deg, #ff4757, #ff3838);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-item-image.gacha-yellow {
+      background: linear-gradient(135deg, #ffa502, #ff9500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gacha-text {
+      text-align: center;
+      color: white;
+    }
+
+    .gacha-number {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .gacha-unit {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .service-item-heart {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .service-item-price {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      background: rgba(0,0,0,0.65);
+      border-radius: 4px;
+      padding: 2px 5px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-fg-bold);
+    }
       border-radius: 8px;
       overflow: hidden;
     }
@@ -3997,14 +4075,17 @@
 
     </div>
   </div>
-  <div id="screen-search" class="screen" style="background:var(--color-bg-primary);">
+  <div id="screen-search" class="screen">
 
     <!-- スクロールコンテンツ -->
     <div class="search-content-scroll">
 
       <!-- カテゴリーセクション -->
       <div class="search-home-section">
-        <h3 class="search-section-title">カテゴリー</h3>
+        <div class="auc-sec-hd">
+          <span class="search-sec-title">カテゴリー</span>
+          <div class="auc-sec-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M11.557 4.293a.95.95 0 0 1 1.371 0l6.788 7c.379.39.379 1.024 0 1.414l-6.788 7a.95.95 0 0 1-1.371 0 1.02 1.02 0 0 1 0-1.414L16.689 13H4.97C4.435 13 4 12.552 4 12s.434-1 .97-1h11.72l-5.133-5.293a1.02 1.02 0 0 1 0-1.414" clip-rule="evenodd"/></svg></div>
+        </div>
         <div class="search-category-grid">
           <div class="search-category-item" style="background-image: url('https://www.figma.com/api/mcp/asset/c0fbdc98-6d02-47b9-8653-2b6d909f7120');">
             <div class="search-category-item-name">トレカ</div>
@@ -4029,7 +4110,10 @@
 
       <!-- ブランドセクション -->
       <div class="search-home-section">
-        <h3 class="search-section-title">ブランド</h3>
+        <div class="auc-sec-hd">
+          <span class="search-sec-title">ブランド</span>
+          <div class="auc-sec-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M11.557 4.293a.95.95 0 0 1 1.371 0l6.788 7c.379.39.379 1.024 0 1.414l-6.788 7a.95.95 0 0 1-1.371 0 1.02 1.02 0 0 1 0-1.414L16.689 13H4.97C4.435 13 4 12.552 4 12s.434-1 .97-1h11.72l-5.133-5.293a1.02 1.02 0 0 1 0-1.414" clip-rule="evenodd"/></svg></div>
+        </div>
         <div class="search-brand-grid">
           <div class="search-brand-item">
             <div class="search-brand-logo">
@@ -4072,45 +4156,86 @@
 
       <!-- 新しいサービスセクション -->
       <div class="search-home-section">
-        <h3 class="search-section-title">新しいサービス</h3>
-
-        <div class="search-service-item">
-          <div class="search-service-header">
-            <div class="search-service-title">出品されたガチャ</div>
-            <img src="https://www.figma.com/api/mcp/asset/c12721cb-f887-44a8-8fb7-3c1d6518529f" alt="矢印" class="search-service-arrow">
-          </div>
-          <div class="search-service-cards">
-            <div class="search-service-card" style="background-image: url('assets/items/m1_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m2_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m3_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m4_1.jpg'); background-size: cover; background-position: center;"></div>
-          </div>
+        <div class="auc-sec-hd">
+          <span class="search-sec-title">メルカリのサービス</span>
+          <div class="auc-sec-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M11.557 4.293a.95.95 0 0 1 1.371 0l6.788 7c.379.39.379 1.024 0 1.414l-6.788 7a.95.95 0 0 1-1.371 0 1.02 1.02 0 0 1 0-1.414L16.689 13H4.97C4.435 13 4 12.552 4 12s.434-1 .97-1h11.72l-5.133-5.293a1.02 1.02 0 0 1 0-1.414" clip-rule="evenodd"/></svg></div>
         </div>
 
-        <div class="search-service-item">
-          <div class="search-service-header">
-            <div class="search-service-title">メルカリNFT</div>
-            <img src="https://www.figma.com/api/mcp/asset/c12721cb-f887-44a8-8fb7-3c1d6518529f" alt="矢印" class="search-service-arrow">
-          </div>
-          <div class="search-service-cards">
-            <div class="search-service-card" style="background-image: url('assets/items/m5_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m6_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m7_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m8_1.jpg'); background-size: cover; background-position: center;"></div>
-          </div>
-        </div>
+        <!-- 横スクロールカルーセル -->
+        <div class="service-carousel-container">
 
-        <div class="search-service-item">
-          <div class="search-service-header">
-            <div class="search-service-title">メルカリギフト</div>
-            <img src="https://www.figma.com/api/mcp/asset/c12721cb-f887-44a8-8fb7-3c1d6518529f" alt="矢印" class="search-service-arrow">
+          <!-- 出品されたギガ -->
+          <div class="service-carousel-card">
+            <div class="service-card-header">
+              <span class="service-card-title">出品されたギガ</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M11.557 4.293a.95.95 0 0 1 1.371 0l6.788 7c.379.39.379 1.024 0 1.414l-6.788 7a.95.95 0 0 1-1.371 0 1.02 1.02 0 0 1 0-1.414L16.689 13H4.97C4.435 13 4 12.552 4 12s.434-1 .97-1h11.72l-5.133-5.293a1.02 1.02 0 0 1 0-1.414" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="service-card-items">
+              <div class="service-item-tile">
+                <div class="service-item-image">
+                  <img src="https://www.figma.com/api/mcp/asset/cb86fe47-9684-4942-997c-3b42f28fb40b" alt="">
+                  <div class="service-item-price">¥2,800</div>
+                </div>
+              </div>
+              <div class="service-item-tile">
+                <div class="service-item-image">
+                  <img src="https://www.figma.com/api/mcp/asset/23c1d4e5-7b9c-4bfb-924a-ab91affb2fe9" alt="">
+                  <div class="service-item-price">¥2,800</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="search-service-cards">
-            <div class="search-service-card" style="background-image: url('assets/items/m9_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m10_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m11_1.jpg'); background-size: cover; background-position: center;"></div>
-            <div class="search-service-card" style="background-image: url('assets/items/m12_1.jpg'); background-size: cover; background-position: center;"></div>
+
+          <!-- メルカリNFT -->
+          <div class="service-carousel-card">
+            <div class="service-card-header">
+              <span class="service-card-title">メルカリNFT</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M11.557 4.293a.95.95 0 0 1 1.371 0l6.788 7c.379.39.379 1.024 0 1.414l-6.788 7a.95.95 0 0 1-1.371 0 1.02 1.02 0 0 1 0-1.414L16.689 13H4.97C4.435 13 4 12.552 4 12s.434-1 .97-1h11.72l-5.133-5.293a1.02 1.02 0 0 1 0-1.414" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="service-card-items">
+              <div class="service-item-tile">
+                <div class="service-item-image">
+                  <img src="https://www.figma.com/api/mcp/asset/c78a3767-f202-4b87-bd59-526c4d97953b" alt="">
+                  <div class="service-item-price">¥2,800</div>
+                </div>
+              </div>
+              <div class="service-item-tile">
+                <div class="service-item-image">
+                  <img src="https://www.figma.com/api/mcp/asset/c409d2cb-677c-4432-8f24-fce3ecd88e29" alt="">
+                  <div class="service-item-price">¥2,800</div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!-- メルカリギフト -->
+          <div class="service-carousel-card">
+            <div class="service-card-header">
+              <span class="service-card-title">メルカリギフト</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M11.557 4.293a.95.95 0 0 1 1.371 0l6.788 7c.379.39.379 1.024 0 1.414l-6.788 7a.95.95 0 0 1-1.371 0 1.02 1.02 0 0 1 0-1.414L16.689 13H4.97C4.435 13 4 12.552 4 12s.434-1 .97-1h11.72l-5.133-5.293a1.02 1.02 0 0 1 0-1.414" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="service-card-items">
+              <div class="service-item-tile">
+                <div class="service-item-image">
+                  <img src="https://www.figma.com/api/mcp/asset/38fcdbe9-a856-44b0-a279-29206c018e33" alt="">
+                  <div class="service-item-price">¥2,800</div>
+                </div>
+              </div>
+              <div class="service-item-tile">
+                <div class="service-item-image">
+                  <img src="https://www.figma.com/api/mcp/asset/76415ab7-cf8b-42c6-bad4-7193cdbb504c" alt="">
+                  <div class="service-item-price">¥2,800</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
       </div>
@@ -5357,7 +5482,8 @@
 
   // コンテンツエリアの高さをキーボードに関係なく常に全画面に固定
   function fixSearchContentHeight() {
-    document.querySelector('.search-content-scroll').style.height = FULL_HEIGHT + 'px';
+    // Height is handled by CSS positioning (top/bottom), no need to set explicit height
+    // document.querySelector('.search-content-scroll').style.height = FULL_HEIGHT + 'px';
   }
 
   // 前回のキーボード高さを記憶（次回 goToSearch 時に即座に適用してラグを防ぐ）
