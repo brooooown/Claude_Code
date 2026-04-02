@@ -549,6 +549,11 @@
       gap: 8px;
     }
 
+    /* Remove white background from glass pills in search mode to prevent content overlap */
+    .tab-bar-wrapper.search-mode .glass-pill {
+      background: transparent;
+    }
+
     /* Search pill transformation: circle → search bar */
     .tab-bar-wrapper.search-mode .search-pill {
       width: calc(100% - 80px);
