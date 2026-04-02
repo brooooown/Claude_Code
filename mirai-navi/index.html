@@ -1216,6 +1216,15 @@
     #screen-search.active ~ .top-nav { display: none; }
     .idp-open .top-nav { display: none; }
 
+    /* Comprehensive top-nav hiding for recent search screen */
+    body:has(#recent-search-screen.active) .top-nav,
+    html:has(#recent-search-screen.active) .top-nav {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
     .nav-right {
       display: flex;
       align-items: center;
@@ -1414,8 +1423,23 @@
 
     /* Hide top navigation when recent search is active */
     #recent-search-screen.active ~ * .top-nav,
-    #recent-search-screen.active + * .top-nav {
+    #recent-search-screen.active + * .top-nav,
+    #screen-search.active #recent-search-screen.active ~ .top-nav,
+    #screen-search:has(#recent-search-screen.active) .top-nav,
+    #recent-search-screen.active ~ .top-nav,
+    .device:has(#recent-search-screen.active) .top-nav {
       display: none !important;
+    }
+
+    /* More specific rule: when recent search screen is active, hide top-nav completely */
+    #recent-search-screen.active {
+      /* Ensure top-nav is removed from the layout */
+    }
+
+    #recent-search-screen.active ~ .device .top-nav,
+    .device:has(#screen-search.active #recent-search-screen.active) .top-nav {
+      display: none !important;
+      visibility: hidden !important;
     }
 
     .recent-search-header {
@@ -4849,7 +4873,6 @@
       <!-- Bottom navigation - exact reference match -->
       <div class="search-results-nav">
         <div class="tab-group glass-pill">
-          <div class="tab-indicator"></div>
           <button class="tab-item active">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/>
@@ -6082,11 +6105,73 @@
 
   function updateTabIndicator(el, instant) {
     const indicator = document.getElementById('tab-indicator');
-    if (!indicator || !el) return;
+    if (!indicator) {
+      console.error('updateTabIndicator: main tab indicator not found!'); // Debug
+      return;
+    }
+    if (!el) {
+      console.error('updateTabIndicator: target element is null!'); // Debug
+      return;
+    }
+
+    // 要素がメインタブバー内にあるか確認
+    const mainTabBar = document.querySelector('.tab-bar-wrapper .tab-group-pill');
+    if (mainTabBar && !mainTabBar.contains(el)) {
+      console.error('updateTabIndicator: element is not in main tab bar!', el); // Debug
+      // メインタブバーから対応する要素を検索
+      const tabText = el.textContent?.trim();
+      const correctEl = Array.from(mainTabBar.querySelectorAll('.tab-item')).find(tab =>
+        tab.textContent?.trim() === tabText
+      );
+      if (correctEl) {
+        console.log('updateTabIndicator: found correct element in main tab bar:', correctEl); // Debug
+        el = correctEl;
+      } else {
+        console.error('updateTabIndicator: could not find corresponding element in main tab bar'); // Debug
+        return;
+      }
+    }
+
+    // 要素が実際に表示されているか確認
+    if (el.offsetWidth === 0 || el.offsetHeight === 0) {
+      console.log('updateTabIndicator: element not visible, retrying...'); // Debug
+      requestAnimationFrame(() => updateTabIndicator(el, instant));
+      return;
+    }
+
     if (instant) indicator.style.transition = 'none';
-    indicator.style.left = (el.offsetLeft + 4) + 'px';
-    indicator.style.width = (el.offsetWidth - 8) + 'px';
-    if (instant) requestAnimationFrame(() => { indicator.style.transition = ''; });
+
+    // **重要**: メインタブバー内での相対位置を計算する
+    const tabGroup = document.querySelector('.tab-bar-wrapper .tab-group-pill');
+    let left, width;
+
+    if (tabGroup && tabGroup.contains(el)) {
+      // メインタブバー内の要素の場合、正確な相対位置を計算
+      const tabGroupRect = tabGroup.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      left = (elRect.left - tabGroupRect.left) + 4;
+      width = elRect.width - 8;
+      console.log('updateTabIndicator: using precise relative positioning - tabGroup offset, element relative position'); // Debug
+    } else {
+      // フォールバック: 従来の方法
+      left = el.offsetLeft + 4;
+      width = el.offsetWidth - 8;
+      console.log('updateTabIndicator: using fallback offsetLeft positioning'); // Debug
+    }
+
+    indicator.style.left = left + 'px';
+    indicator.style.width = width + 'px';
+
+    console.log('updateTabIndicator: SUCCESS - positioned at left:', left, 'width:', width, 'for element:', el.textContent?.trim()); // Debug
+    console.log('updateTabIndicator: indicator element:', indicator); // Debug
+    console.log('updateTabIndicator: element onclick attr:', el.getAttribute('onclick')); // Debug
+    console.log('updateTabIndicator: element parent:', el.parentElement); // Debug
+
+    if (instant) {
+      requestAnimationFrame(() => {
+        indicator.style.transition = '';
+      });
+    }
   }
 
   const tabScrollMap = { home: '.home-scroll', auction: '.auc-scroll', list: '.list-scroll', wallet: '.wal-scroll' };
@@ -6378,8 +6463,10 @@
       _currentItemIsAuction = false;
       _currentItemIsListing = false;
     }
-    // 検索画面から別タブに切り替える場合、検索状態をリセット
+    // 検索画面から別タブに切り替える場合、検索状態を完全にリセット
     if (_activeTab === 'search' || document.getElementById('screen-search').classList.contains('active')) {
+      console.log('Switching from search to', tabName); // Debug
+
       hideAllSearchResults();
       var searchInput = document.getElementById('search-input');
       searchInput.blur();
@@ -6396,17 +6483,116 @@
       const tabBarWrapper = document.querySelector('.tab-bar-wrapper');
       if (tabBarWrapper) {
         tabBarWrapper.classList.remove('search-mode');
+
+        // タブバーのレイアウトが確実にリセットされるよう強制的にリフロー
+        tabBarWrapper.offsetHeight;
+        console.log('Reset tab bar layout from search mode'); // Debug
       }
+
+      // **重要**: 検索画面を確実に非アクティブにする
+      const searchScreen = document.getElementById('screen-search');
+      searchScreen.classList.remove('active');
+
+      // 検索フロートバーと検索関連UI要素を完全に非表示
+      const searchFloatBar = document.getElementById('search-float-bar');
+      if (searchFloatBar) {
+        searchFloatBar.style.display = 'none';
+      }
+
+      // 検索画面のコンテンツスクロール要素も非表示
+      const searchContentScroll = document.querySelector('.search-content-scroll');
+      if (searchContentScroll) {
+        searchContentScroll.style.display = 'none';
+      }
+
+      // Recent search screen を完全に非表示
+      const recentSearchScreen = document.getElementById('recent-search-screen');
+      if (recentSearchScreen) {
+        recentSearchScreen.classList.remove('active');
+        recentSearchScreen.style.display = 'none';
+      }
+
+      // すべての検索関連の状態をクリア
+      _activeTab = null;
     }
+    // タブとスクリーンの状態を確実に更新
     document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.search-btn').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
+
+    // **重要**: メインのタブバーから正しいタブ要素を確実に取得
+    const mainTabBarWrapper = document.querySelector('.tab-bar-wrapper');
+    const mainTabGroup = mainTabBarWrapper ? mainTabBarWrapper.querySelector('.tab-group-pill') : null;
+    const correctTabElement = mainTabGroup ? mainTabGroup.querySelector(`.tab-item[onclick*="'${tabName}'"]`) : null;
+
+    console.log('Debug - mainTabBarWrapper:', mainTabBarWrapper); // Debug
+    console.log('Debug - mainTabGroup:', mainTabGroup); // Debug
+    console.log('Debug - searching for tab:', tabName); // Debug
+    console.log('Debug - correctTabElement found:', correctTabElement); // Debug
+
+    // 使用する最終的な要素を決定（必ずメインタブバーから）
+    const finalTabElement = correctTabElement;
+
+    if (finalTabElement) {
+      finalTabElement.classList.add('active');
+      console.log('Found and activated correct tab element for', tabName, ':', finalTabElement); // Debug
+    } else {
+      console.error('ERROR: Could not find main tab element for', tabName, '- tab switching may not work correctly'); // Debug
+      // 緊急フォールバック: すべてのメインタブから検索
+      const fallbackElement = document.querySelector(`.tab-bar-wrapper .tab-item[onclick*="'${tabName}'"]`);
+      if (fallbackElement) {
+        fallbackElement.classList.add('active');
+        console.log('Used emergency fallback element for', tabName, ':', fallbackElement); // Debug
+      }
+    }
+
+    // **重要**: すべてのスクリーンを非アクティブ化してからターゲットスクリーンをアクティブ化
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + tabName).classList.add('active');
-    updateTabIndicator(el);
+
+    const targetScreen = document.getElementById('screen-' + tabName);
+    if (targetScreen) {
+      targetScreen.classList.add('active');
+      console.log('Activated screen:', tabName); // Debug
+    } else {
+      console.error('Target screen not found:', 'screen-' + tabName); // Debug
+    }
+
+    // タブインジケーターの更新を遅延実行（レイアウト確定後）
+    requestAnimationFrame(() => {
+      // メインタブバーの要素が見つかった場合のみ更新
+      const elementToUpdate = finalTabElement || document.querySelector(`.tab-bar-wrapper .tab-item[onclick*="'${tabName}'"]`);
+
+      if (elementToUpdate) {
+        updateTabIndicator(elementToUpdate, true); // instantモードで即座に位置更新
+        console.log('Updated tab indicator for:', tabName, 'using element:', elementToUpdate); // Debug
+        console.log('Element position - left:', elementToUpdate.offsetLeft, 'width:', elementToUpdate.offsetWidth); // Debug
+      } else {
+        console.error('ERROR: Could not update tab indicator - no valid element found for', tabName); // Debug
+      }
+    });
+
     if (tabName !== 'search') {
       _activeTab = tabName;
       _restoreTabState(tabName);
+
+      // **重要**: ターゲット画面が確実に表示されるよう追加チェック
+      requestAnimationFrame(() => {
+        const screen = document.getElementById('screen-' + tabName);
+        if (screen && !screen.classList.contains('active')) {
+          console.log('Re-activating screen:', tabName); // Debug
+          screen.classList.add('active');
+        }
+      });
+    } else {
+      // 検索タブに切り替える場合は検索要素を復元
+      const searchFloatBar = document.getElementById('search-float-bar');
+      if (searchFloatBar) {
+        searchFloatBar.style.display = 'block';
+      }
+
+      const searchContentScroll = document.querySelector('.search-content-scroll');
+      if (searchContentScroll) {
+        searchContentScroll.style.display = 'block';
+      }
     }
   }
 
@@ -7365,10 +7551,25 @@
 
   function hideRecentSearchScreen() {
     console.log('Hiding recent search screen');
-    // Show main search screen content and hide recent search
-    document.querySelector('.search-content-scroll').style.display = 'block';
-    document.querySelector('.search-float-bar').style.display = 'block';
-    document.getElementById('recent-search-screen').classList.remove('active');
+
+    // Recent search screen を非表示
+    const recentSearchScreen = document.getElementById('recent-search-screen');
+    if (recentSearchScreen) {
+      recentSearchScreen.classList.remove('active');
+    }
+
+    // 検索タブがアクティブな場合のみ検索要素を表示
+    if (document.getElementById('screen-search').classList.contains('active')) {
+      const searchContentScroll = document.querySelector('.search-content-scroll');
+      const searchFloatBar = document.querySelector('.search-float-bar');
+
+      if (searchContentScroll) {
+        searchContentScroll.style.display = 'block';
+      }
+      if (searchFloatBar) {
+        searchFloatBar.style.display = 'block';
+      }
+    }
   }
 
   function selectSearchItem(element, searchQuery) {
@@ -7378,6 +7579,30 @@
     // Show search results for the selected query
     showSearchResults(searchQuery);
   }
+
+  // 検索履歴からのタブ切り替えを確実にするイベントデリゲーション
+  document.addEventListener('click', function(e) {
+    // 折り畳まれたタブがクリックされた場合
+    const tabItem = e.target.closest('.tab-item');
+    if (tabItem && document.getElementById('screen-search').classList.contains('active')) {
+      const onclickAttr = tabItem.getAttribute('onclick');
+      if (onclickAttr && onclickAttr.includes('switchTab')) {
+        console.log('Delegated tab click detected:', onclickAttr); // Debug
+
+        // onclickの内容を解析してタブ名を取得
+        const match = onclickAttr.match(/switchTab\('(\w+)', this\)/);
+        if (match) {
+          const tabName = match[1];
+          console.log('Switching to tab via delegation:', tabName); // Debug
+
+          // switchTab関数を直接呼び出し
+          switchTab(tabName, tabItem);
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }
+    }
+  });
 
   // Add event listener to search input fields to show recent search screen
   document.addEventListener('DOMContentLoaded', function() {
