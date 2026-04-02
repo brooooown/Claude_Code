@@ -646,15 +646,9 @@
       color: var(--color-fg-primary) !important;
     }
 
-    /* Ensure tab label is visible in search mode */
+    /* Hide tab label in search mode for cleaner look */
     .tab-bar-wrapper.search-mode .tab-item.active .tab-label {
-      display: block !important;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--color-fg-primary);
-      text-align: center;
-      position: relative;
-      z-index: 4;
+      display: none !important;
     }
 
     /* Ensure smooth transitions for all tab items */
