@@ -825,7 +825,7 @@
       overscroll-behavior-x: none;
     }
 
-    /* 検索結果グリッド - Reference prototype structure */
+    /* 検索結果グリッド - 参考プロトタイプと完全一致 */
     .search-results-view {
       position: absolute;
       inset: 0;
@@ -833,254 +833,166 @@
       transform: translateX(100%);
       transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
       z-index: 5;
-      display: flex;
-      flex-direction: column;
     }
     .search-results-view.active { transform: translateX(0); }
 
-    /* Top floating search bar with glass morphism */
-    .search-results-header {
-      position: sticky;
-      top: 0; left: 0; right: 0;
-      z-index: 201;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .search-results-float-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-    }
-
-    .search-results-input-wrap {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--color-bg-secondary);
-      border-radius: 20px;
-      padding: 8px 16px;
-    }
-
-    .search-results-input-wrap .search-input-icon {
-      color: var(--color-fg-tertiary);
-      flex-shrink: 0;
-    }
-
-    .search-results-input {
-      flex: 1;
-      border: none;
-      background: none;
-      font-size: 16px;
-      color: var(--color-fg-primary);
-      outline: none;
-    }
-    .search-results-input::placeholder {
-      color: var(--color-fg-tertiary);
-    }
-
-    .search-results-cancel {
-      flex-shrink: 0;
-      border: none;
-      background: none;
-      color: var(--color-fg-accent);
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 4px;
-    }
-
     /* Main scrollable content */
     .search-results-scroll {
-      flex: 1;
+      position: absolute;
+      inset: 0;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px) + 16px);
+      padding-bottom: 140px; /* Space for floating elements */
       overscroll-behavior-y: contain;
     }
     .search-results-scroll::-webkit-scrollbar { display: none; }
 
-    /* Filter system */
+    /* Filter system - exact reference match */
     .search-results-filters {
-      padding: 16px;
-      padding-bottom: 0;
+      padding-top: 68px; /* Space for potential top elements */
     }
 
-    .search-filter-row {
+    /* Filter chip bar with horizontal scroll */
+    .filter-chip-bar {
       display: flex;
+      overflow-x: auto;
       gap: 8px;
-      margin-bottom: 12px;
+      padding: 16px 16px 12px;
+      -webkit-overflow-scrolling: touch;
     }
+    .filter-chip-bar::-webkit-scrollbar { display: none; }
 
-    .search-filter-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
-      border: 1px solid var(--color-border-primary);
-      border-radius: 20px;
-      background: var(--color-bg-primary);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-fg-secondary);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .search-filter-btn.active {
-      background: var(--color-bg-accent);
-      color: var(--color-fg-bold);
-      border-color: var(--color-bg-accent);
-    }
-
-    .search-filter-btn svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    /* Category chips with horizontal scroll */
-    .search-categories-scroll {
+    /* Category filters with left fade gradient mask */
+    .filter-categories-wrap {
+      position: relative;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      margin-bottom: 16px;
+      padding: 0 16px 16px;
     }
-    .search-categories-scroll::-webkit-scrollbar { display: none; }
+    .filter-categories-wrap::-webkit-scrollbar { display: none; }
 
-    .search-categories {
+    /* Left fade gradient mask - exact reference match */
+    .filter-categories-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: 16px;
+      width: 24px;
+      background: linear-gradient(to right, var(--color-bg-primary), transparent);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .filter-categories {
       display: flex;
       gap: 8px;
+      padding-left: 8px;
       padding-right: 16px;
     }
 
-    .search-category-chip {
+    /* Filter chips - exact reference styling */
+    .filter-chip {
       flex-shrink: 0;
-      padding: 6px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 36px;
+      padding: 4px 12px;
+      border-radius: 9999px;
       border: 1px solid var(--color-border-primary);
-      border-radius: 20px;
       background: var(--color-bg-primary);
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-fg-secondary);
-      cursor: pointer;
+      font-size: 12px;
+      color: var(--color-fg-primary);
       white-space: nowrap;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .search-category-chip:hover,
-    .search-category-chip.active {
-      background: var(--color-bg-accent);
+    .filter-chip:active { opacity: 0.5; }
+
+    .filter-chip.active {
+      background: var(--color-bg-bold);
       color: var(--color-fg-bold);
-      border-color: var(--color-bg-accent);
+      border-color: var(--color-bg-bold);
     }
 
-    /* Results count */
-    .search-results-count {
-      padding: 0 16px 8px;
-      font-size: 13px;
-      color: var(--color-fg-tertiary);
+    .filter-chip svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
     }
 
-    /* Product grid */
+    /* Product grid - exact reference match */
     .search-results-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 2px;
-      padding: 0 16px 16px;
+      padding: 0 2px;
     }
 
     .search-results-tile {
       position: relative;
-      background: var(--color-bg-primary);
-      border-radius: 4px;
       overflow: hidden;
-      cursor: pointer;
       aspect-ratio: 1;
     }
 
     .search-results-tile img {
-      width: 100%;
-      height: 100%;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       object-fit: cover;
     }
 
     .search-results-tile .home-tile-heart {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 24px;
-      height: 24px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
+      position: absolute; bottom: 4px; right: 4px;
     }
 
     .search-results-price {
+      position: absolute; bottom: 6px; left: 6px;
+      background: rgba(34,34,34,0.52);
+      border-radius: 9999px;
+      padding: 3px 8px;
+      font-size: 11px; font-weight: 600;
+      color: #fff; line-height: 1.3;
+    }
+
+    /* Bottom floating search bar - exact reference match */
+    .search-results-float-bar {
       position: absolute;
-      bottom: 4px;
-      left: 4px;
-      right: 4px;
-      padding: 2px 4px;
-      background: rgba(0, 0, 0, 0.75);
-      color: white;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    /* Bottom navigation with glass morphism */
-    .search-results-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 210;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    .search-nav-glass {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .search-nav-content {
+      left: 0; right: 0; bottom: 0;
       display: flex;
-      padding: 8px 16px;
+      gap: 10px;
+      padding: 10px 12px 16px;
+      z-index: 15;
     }
 
-    .search-nav-tab {
+    .search-results-float-bar .search-input-wrap {
       flex: 1;
+    }
+
+    .search-results-cancel {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 2px;
-      border: none;
-      background: none;
-      padding: 8px;
-      cursor: pointer;
-      color: var(--color-fg-tertiary);
-    }
-
-    .search-nav-tab.active {
+      justify-content: center;
       color: var(--color-fg-accent);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      padding: 0 16px;
+      min-height: 44px;
     }
 
-    .search-nav-tab svg {
-      width: 20px;
-      height: 20px;
+    /* Bottom navigation - exact reference match */
+    .search-results-nav {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      gap: 10px;
+      padding: 0 12px 16px;
+      z-index: 14;
     }
 
-    .search-nav-tab span {
-      font-size: 11px;
-      font-weight: 500;
+    .search-results-nav .tab-group {
+      flex: 1;
     }
 
     /* 検索画面ではタブバーを非表示（ただし検索モード時は表示維持） */
@@ -1494,8 +1406,16 @@
 
     /* Hide upper icon navigation when recent search screen is active */
     #recent-search-screen.active ~ .device .icon-nav,
-    #screen-search.active:has(#recent-search-screen.active) .icon-nav {
+    #screen-search.active:has(#recent-search-screen.active) .icon-nav,
+    #screen-search.active #recent-search-screen.active ~ .top-nav,
+    #screen-search.active:has(#recent-search-screen.active) .top-nav {
       display: none;
+    }
+
+    /* Hide top navigation when recent search is active */
+    #recent-search-screen.active ~ * .top-nav,
+    #recent-search-screen.active + * .top-nav {
+      display: none !important;
     }
 
     .recent-search-header {
@@ -4872,114 +4792,94 @@
       </div>
     </div>
 
-    <!-- 検索結果ビュー（右からスライドイン）- Reference prototype structure -->
+    <!-- 検索結果ビュー - 参考プロトタイプと完全一致 -->
     <div class="search-results-view">
-      <!-- Top floating search bar with glass morphism -->
-      <div class="search-results-header">
-        <div class="search-results-float-bar">
-          <div class="search-results-input-wrap">
-            <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/></svg>
-            <input
-              class="search-results-input"
-              type="search"
-              placeholder="商品を検索"
-              autocomplete="off"
-              autocorrect="off"
-              spellcheck="false"
-            />
-          </div>
-          <button class="search-results-cancel" onclick="hideSearchResults()">キャンセル</button>
-        </div>
-      </div>
-
       <!-- Main content area -->
       <div class="search-results-scroll">
-        <!-- Filter system -->
+        <!-- Filter system - exact reference match -->
         <div class="search-results-filters">
-          <!-- Main action filters -->
-          <div class="search-filter-row">
-            <button class="search-filter-btn" onclick="toggleFilterChip(this)">
+          <!-- Main filter chip bar -->
+          <div class="filter-chip-bar">
+            <button class="filter-chip active" onclick="toggleFilterChip(this)">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M9.3 18.8a1.3 1.3 0 0 1-.94-.4L2.7 12.62l1.88-1.92 4.72 4.82L19.42 5.2l1.88 1.92L10.24 18.4a1.3 1.3 0 0 1-.94.4"/>
               </svg>
               販売中のみ
             </button>
-
-            <button class="search-filter-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path fill-rule="evenodd" d="M7.017 5c.283.018.55.139.75.34l2.85 2.76a.71.71 0 0 1-.771 1.155.7.7 0 0 1-.23-.155l-2-1.94V18.3a.7.7 0 1 1-1.4 0V7.14l-2 2a.67.67 0 0 1-.49.2.7.7 0 0 1-.5-.21.7.7 0 0 1 0-1l2.85-2.81a1.24 1.24 0 0 1 .74-.32h.2m13.57 9.725a.7.7 0 0 1 .23.155.7.7 0 0 1-.03.94l-2.85 2.79a1.2 1.2 0 0 1-.61.29.6.6 0 0 1-.24.05.9.9 0 0 1-.22 0 1.3 1.3 0 0 1-.62-.3l-2.83-2.76a.707.707 0 0 1 1-1l2 1.95V5.7a.7.7 0 1 1 1.4 0v11.18l2-2a.7.7 0 0 1 .77-.155" clip-rule="evenodd"/>
-              </svg>
-              並び替え
-            </button>
-
-            <button class="search-filter-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11.156 19.424a.956.956 0 0 1-.956-.953.956.956 0 0 1 1.913 0 .955.955 0 0 1-.957.953m9.056-1.74H13.55a2.53 2.53 0 0 0-2.393-1.74 2.53 2.53 0 0 0-2.393 1.74H3.788a.787.787 0 1 0 0 1.576h4.975A2.53 2.53 0 0 0 11.156 21a2.53 2.53 0 0 0 2.393-1.74h6.663a.787.787 0 1 0 0-1.575zm-5.118-4.76a.955.955 0 0 1-.957-.953.955.955 0 0 1 1.913 0 .955.955 0 0 1-.956.953m5.118-1.74h-2.725a2.53 2.53 0 0 0-2.393-1.74 2.53 2.53 0 0 0-2.393 1.74H3.788a.788.788 0 0 0 0 1.576H12.7a2.53 2.53 0 0 0 2.393 1.74 2.53 2.53 0 0 0 2.393-1.74h2.726a.788.788 0 0 0 0-1.575zM8.907 4.575c.528 0 .957.428.957.953a.955.955 0 0 1-1.913 0c0-.525.429-.953.956-.953M3.788 6.316h2.726a2.53 2.53 0 0 0 2.392 1.742A2.53 2.53 0 0 0 11.3 6.316h8.914a.787.787 0 1 0 0-1.574h-8.914A2.53 2.53 0 0 0 8.906 3a2.53 2.53 0 0 0-2.392 1.742H3.788a.787.787 0 1 0 0 1.574"/>
-              </svg>
-              絞り込み
-            </button>
           </div>
 
-          <!-- Category chips with horizontal scroll -->
-          <div class="search-categories-scroll">
-            <div class="search-categories">
-              <button class="search-category-chip" onclick="switchSearchKeyword('新品、未使用', this)">新品、未使用</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('未使用に近い', this)">未使用に近い</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('レディース', this)">レディース</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('メンズ', this)">メンズ</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('家電', this)">家電</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('アウトドア', this)">アウトドア</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('コスメ', this)">コスメ</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('トレカ', this)">トレカ</button>
-              <button class="search-category-chip" onclick="switchSearchKeyword('ブランド', this)">ブランド</button>
+          <!-- Category chips with left fade mask -->
+          <div class="filter-categories-wrap">
+            <div class="filter-categories">
+              <button class="filter-chip" onclick="switchSearchKeyword('新品、未使用', this)">新品、未使用</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('未使用に近い', this)">未使用に近い</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('レディース', this)">レディース</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('メンズ', this)">メンズ</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('家電', this)">家電</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('アウトドア', this)">アウトドア</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('コスメ', this)">コスメ</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('トレカ', this)">トレカ</button>
+              <button class="filter-chip" onclick="switchSearchKeyword('ブランド', this)">ブランド</button>
             </div>
           </div>
-        </div>
-
-        <!-- Results count -->
-        <div class="search-results-count">
-          <span id="search-count-text">約 1,234,567 件</span>
         </div>
 
         <!-- Product grid -->
         <div class="search-results-grid"></div>
       </div>
 
-      <!-- Bottom navigation with glass morphism -->
+      <!-- Bottom floating search bar - exact reference match -->
+      <div class="search-results-float-bar">
+        <div class="search-input-wrap glass-pill">
+          <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/>
+          </svg>
+          <input
+            class="search-input-field"
+            type="search"
+            placeholder="商品を検索"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+          />
+        </div>
+        <button class="search-results-cancel glass-pill" onclick="popSearchResults()">キャンセル</button>
+      </div>
+
+      <!-- Bottom navigation - exact reference match -->
       <div class="search-results-nav">
-        <div class="search-nav-glass">
-          <div class="search-nav-content">
-            <button class="search-nav-tab active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/>
-              </svg>
-              <span>検索</span>
-            </button>
-            <button class="search-nav-tab" onclick="switchTab('home', this)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10.55 2.532a2.25 2.25 0 012.9 0l6.75 5.69c.508.427.8 1.056.8 1.728v9.8a1.25 1.25 0 01-1.25 1.25H16a1.25 1.25 0 01-1.25-1.25v-5a.75.75 0 00-.75-.75h-4a.75.75 0 00-.75.75v5A1.25 1.25 0 018 21H4.25A1.25 1.25 0 013 19.75v-9.8c0-.672.292-1.3.8-1.728l6.75-5.69z"/>
-              </svg>
-              <span>ホーム</span>
-            </button>
-            <button class="search-nav-tab" onclick="switchTab('auction', this)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M15.362 8.23a1.83 1.83 0 0 1 1.838 1.828v7.714a1.83 1.83 0 0 1-1.838 1.828H8.638a1.83 1.83 0 0 1-1.838-1.828v-7.714A1.83 1.83 0 0 1 8.638 8.23zm1.838 9.542v-7.714c0-.458-.372-.828-.838-.828H8.638c-.466 0-.838.37-.838.828v7.714c0 .458.372.828.838.828h7.724c.466 0 .838-.37.838-.828M12 4.4c-3.314 0-6 2.686-6 6h1c0-2.761 2.239-5 5-5s5 2.239 5 5h1c0-3.314-2.686-6-6-6"/>
-              </svg>
-              <span>オークション</span>
-            </button>
-            <button class="search-nav-tab" onclick="switchTab('list', this)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 1.6c5.74 0 10.4 4.66 10.4 10.4S17.74 22.4 12 22.4 1.6 17.74 1.6 12 6.26 1.6 12 1.6m0 1.4a9 9 0 1 0 0 18 9 9 0 0 0 0-18"/>
-              </svg>
-              <span>出品</span>
-            </button>
-            <button class="search-nav-tab" onclick="switchTab('wallet', this)">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.25 7.75v8.5A3.75 3.75 0 0 1 16.5 20h-9A3.75 3.75 0 0 1 3.75 16.25v-8.5A3.75 3.75 0 0 1 7.5 4h9a3.75 3.75 0 0 1 3.75 3.75"/>
-              </svg>
-              <span>おさいふ</span>
-            </button>
-          </div>
+        <div class="tab-group glass-pill">
+          <div class="tab-indicator"></div>
+          <button class="tab-item active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="m20.813 19.813-3.94-3.94a7.86 7.86 0 1 0-1 1l3.94 3.94a.7.7 0 0 0 .767.155.7.7 0 0 0 .223-.155.69.69 0 0 0 .01-1m-14.51-4.41a6.44 6.44 0 1 1 9.11 0 6.43 6.43 0 0 1-9.11 0"/>
+            </svg>
+            <span>検索</span>
+          </button>
+          <button class="tab-item" onclick="switchTab('home', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10.55 2.532a2.25 2.25 0 012.9 0l6.75 5.69c.508.427.8 1.056.8 1.728v9.8a1.25 1.25 0 01-1.25 1.25H16a1.25 1.25 0 01-1.25-1.25v-5a.75.75 0 00-.75-.75h-4a.75.75 0 00-.75.75v5A1.25 1.25 0 018 21H4.25A1.25 1.25 0 013 19.75v-9.8c0-.672.292-1.3.8-1.728l6.75-5.69z"/>
+            </svg>
+            <span>ホーム</span>
+          </button>
+          <button class="tab-item" onclick="switchTab('auction', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.362 8.23a1.83 1.83 0 0 1 1.838 1.828v7.714a1.83 1.83 0 0 1-1.838 1.828H8.638a1.83 1.83 0 0 1-1.838-1.828v-7.714A1.83 1.83 0 0 1 8.638 8.23zm1.838 9.542v-7.714c0-.458-.372-.828-.838-.828H8.638c-.466 0-.838.37-.838.828v7.714c0 .458.372.828.838.828h7.724c.466 0 .838-.37.838-.828M12 4.4c-3.314 0-6 2.686-6 6h1c0-2.761 2.239-5 5-5s5 2.239 5 5h1c0-3.314-2.686-6-6-6"/>
+            </svg>
+            <span>オークション</span>
+          </button>
+          <button class="tab-item" onclick="switchTab('list', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 1.6c5.74 0 10.4 4.66 10.4 10.4S17.74 22.4 12 22.4 1.6 17.74 1.6 12 6.26 1.6 12 1.6m0 1.4a9 9 0 1 0 0 18 9 9 0 0 0 0-18"/>
+            </svg>
+            <span>出品</span>
+          </button>
+          <button class="tab-item" onclick="switchTab('wallet', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.25 7.75v8.5A3.75 3.75 0 0 1 16.5 20h-9A3.75 3.75 0 0 1 3.75 16.25v-8.5A3.75 3.75 0 0 1 7.5 4h9a3.75 3.75 0 0 1 3.75 3.75"/>
+            </svg>
+            <span>おさいふ</span>
+          </button>
         </div>
       </div>
     </div>
@@ -6767,8 +6667,8 @@
     var rv = template.cloneNode(true);
     rv.style.zIndex = 5 + _searchResultsStack.length;
 
-    // Set search input value in the results page
-    var searchInput = rv.querySelector('.search-results-input');
+    // Set search input value in the floating search bar
+    var searchInput = rv.querySelector('.search-input-field');
     if (searchInput) {
       searchInput.value = keyword;
     }
@@ -6776,16 +6676,12 @@
     // グリッドを生成
     _populateSearchGrid(keyword, rv.querySelector('.search-results-grid'));
 
-    // Set results count
-    var countText = rv.querySelector('#search-count-text');
-    if (countText) {
-      var count = Math.floor(Math.random() * 500000) + 100000;
-      countText.textContent = `約 ${count.toLocaleString()} 件`;
-    }
-
     // フィルターをリセット
-    rv.querySelectorAll('.search-filter-btn').forEach(function (c) { c.classList.remove('active'); });
-    rv.querySelectorAll('.search-category-chip').forEach(function (c) { c.classList.remove('active'); });
+    rv.querySelectorAll('.filter-chip').forEach(function (c) { c.classList.remove('active'); });
+    // Set first filter as active by default (販売中のみ)
+    var firstFilter = rv.querySelector('.filter-chip');
+    if (firstFilter) firstFilter.classList.add('active');
+
     rv.querySelector('.search-results-scroll').scrollTop = 0;
 
     // キャンセルボタンのイベント設定
