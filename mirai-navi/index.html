@@ -2220,7 +2220,7 @@
   }
   #panel-notification .panel-header,
   #panel-cart .panel-header,
-  #panel-todo .panel-header,
+  #panel-todo .panel-header {
     box-shadow: none;
   }
   .panel-back-btn {
@@ -2283,8 +2283,8 @@
   }
   .panel-chip.active {
     background: #fff;
-    color: #0095EE;
-    border-color: #0095EE;
+    color: var(--color-fg-accent);
+    border-color: var(--color-border-accent);
   }
 
   /* ── お知らせ notification rows ── */
@@ -2293,7 +2293,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 12px 16px;
+    padding: var(--spacing-12) var(--spacing-16);
     cursor: pointer;
     transition: background 0.1s;
     position: relative;
@@ -2391,12 +2391,12 @@
     padding-bottom: 90px;
   }
   .campaign-card {
-    border: 1px solid #0095EE;
+    border: 1px solid var(--color-border-accent);
     border-radius: 4px;
-    padding: 16px 8px 16px 16px;
+    padding: var(--spacing-16) var(--spacing-8) var(--spacing-16) var(--spacing-16);
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--spacing-16);
     background: #fff;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     cursor: pointer;
@@ -2404,7 +2404,7 @@
   .campaign-card-text {
     font-size: 15px;
     font-weight: 600;
-    color: #0095EE;
+    color: var(--color-fg-accent);
     line-height: 1.4;
     flex: 1;
   }
@@ -2415,8 +2415,8 @@
   .info-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: var(--spacing-12);
+    padding: var(--spacing-12) var(--spacing-16);
     cursor: pointer;
     transition: background 0.1s;
     position: relative;
@@ -2493,11 +2493,11 @@
   .cart-check-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
+    gap: var(--spacing-8);
+    padding: var(--spacing-12) var(--spacing-16);
     background: var(--color-bg-primary);
     border-bottom: 1px solid var(--color-border-primary);
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-8);
     font-size: 14px;
     font-weight: 400;
     color: var(--color-fg-primary);
@@ -2549,9 +2549,9 @@
     flex: 1;
   }
   .cart-item-group {
-    padding: 12px 16px;
+    padding: var(--spacing-12) var(--spacing-16);
     display: flex;
-    gap: 12px;
+    gap: var(--spacing-12);
     align-items: flex-start;
   }
   .cart-item-thumb {
@@ -2565,7 +2565,7 @@
   }
   .cart-item-info { flex: 1; min-width: 0; }
   .cart-item-name {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
     color: var(--color-fg-primary);
     line-height: 1.4;
@@ -5083,8 +5083,8 @@
     <div class="campaign-card-wrap">
       <div class="campaign-card">
         <div class="campaign-card-text">6件のおすすめキャンペーンを見る</div>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" flex-shrink="0">
-          <path d="M7.5 4.5L13 10L7.5 15.5" stroke="#0073CC" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" flex-shrink="0" style="color: var(--color-fg-accent);">
+          <path d="M7.5 4.5L13 10L7.5 15.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
     </div>
